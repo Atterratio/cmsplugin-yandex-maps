@@ -1,8 +1,8 @@
-'{% load i18n sekizai_tags %}
+{% load i18n sekizai_tags %}
 
 <div class="cmsplugin-ya-maps {{ instance.classes }}">
     <div>
-        <div id="map-{{ instance.id }}" ></div>
+        <div id="map-{{ instance.id }}"></div>
     </div>
 </div>
 
@@ -13,7 +13,12 @@
     var jqYM = jQuery.noConflict(true);
         jqYM(document).ready(function(){
             ya_map_{{ instance.id }}();
-            jqYM('#map-{{ instance.id }}').on('show', function(){
+            jqYM('#map-{{ instance.id }}').on('change', function(){
+                {% if instance.auto_size %}
+                    jqYM('#map-{{ instance.id }}').parent().width('100%');
+                    jqYM('#map-{{ instance.id }}').width(jqYM('#map-{{ instance.id }}').parent().innerWidth());
+                    jqYM('#map-{{ instance.id }}').height(jqYM('#map-{{ instance.id }}').parent().innerWidth()/{{ instance.width }}*{{ instance.height }});
+                {% endif %}
                 yaMap_{{ instance.id }}.container.fitToViewport();
             });
         });
