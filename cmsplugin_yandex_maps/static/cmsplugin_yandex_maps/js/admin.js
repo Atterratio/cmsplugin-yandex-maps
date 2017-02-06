@@ -51,7 +51,7 @@ function icon_style(elem){
 			$(elem).closest('fieldset').find("div.form-row.field-icon_image label").removeClass('required');
 			$(elem).closest('fieldset').find("div.field-box.field-icon_caption").hide();
 			$(elem).closest('fieldset').find("div.field-box.field-icon_circle").show();
-			$(elem).closest('fieldset').find("div.form-row.field-icon_width.field-icon_heigt").hide();
+			$(elem).closest('fieldset').find("div.form-row.field-icon_width.field-icon_height").hide();
 			$(elem).closest('fieldset').find("div.form-row.field-icon_offset_horizontal.field-icon_offset_vertical").hide();
 			$(elem).closest('fieldset').find("div.form-row.field-icon_content_offset_horizontal.field-icon_content_offset_vertical").hide();
 			break;
@@ -62,7 +62,7 @@ function icon_style(elem){
 			$(elem).closest('fieldset').find("div.form-row.field-icon_image label").removeClass('required');
 			$(elem).closest('fieldset').find("div.field-box.field-icon_caption").hide();
 			$(elem).closest('fieldset').find("div.field-box.field-icon_circle").hide();
-			$(elem).closest('fieldset').find("div.form-row.field-icon_width.field-icon_heigt").hide();
+			$(elem).closest('fieldset').find("div.form-row.field-icon_width.field-icon_height").hide();
 			$(elem).closest('fieldset').find("div.form-row.field-icon_offset_horizontal.field-icon_offset_vertical").hide();
 			$(elem).closest('fieldset').find("div.form-row.field-icon_content_offset_horizontal.field-icon_content_offset_vertical").hide();
 			break;
@@ -73,7 +73,7 @@ function icon_style(elem){
 			$(elem).closest('fieldset').find("div.form-row.field-icon_image label").removeClass('required');
 			$(elem).closest('fieldset').find("div.field-box.field-icon_caption").show();
 			$(elem).closest('fieldset').find("div.field-box.field-icon_circle").show();
-			$(elem).closest('fieldset').find("div.form-row.field-icon_width.field-icon_heigt").hide();
+			$(elem).closest('fieldset').find("div.form-row.field-icon_width.field-icon_height").hide();
 			$(elem).closest('fieldset').find("div.form-row.field-icon_offset_horizontal.field-icon_offset_vertical").hide();
 			$(elem).closest('fieldset').find("div.form-row.field-icon_content_offset_horizontal.field-icon_content_offset_vertical").hide();
 			break;
