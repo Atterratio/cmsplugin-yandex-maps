@@ -3,8 +3,8 @@ from cms.plugin_pool import plugin_pool
 from django.contrib import admin
 from django.utils.translation import ugettext as _
 
-from .forms import YandexMapForm, PlacemarkForm
-from .models import YandexMapModel, Behavior, Control, Placemark
+from .forms import YandexMapsForm, PlacemarkForm
+from .models import YandexMaps, Behavior, Control, Placemark
 
 
 
@@ -32,8 +32,8 @@ admin.site.register(Control)
 
 
 
-class YandexMapPlugin(CMSPluginBase):
-    model = YandexMapModel
+class YandexMapsPlugin(CMSPluginBase):
+    model = YandexMaps
     name = _("Yandex Maps Plugin")
     render_template = "cmsplugin_yandex_maps/yandex_maps.djhtml"
     fieldsets = [
@@ -54,7 +54,7 @@ class YandexMapPlugin(CMSPluginBase):
                          'classes': ['collapse']}),
     ]
     inlines = (PlacemarkAdmin, )
-    form = YandexMapForm
+    form = YandexMapsForm
     class Media:
         js = ('cmsplugin_yandex_maps/js/admin.js',)
 
@@ -76,4 +76,4 @@ class YandexMapPlugin(CMSPluginBase):
         return context
 
 
-plugin_pool.register_plugin(YandexMapPlugin)
+plugin_pool.register_plugin(YandexMapsPlugin)

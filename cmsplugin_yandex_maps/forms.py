@@ -1,10 +1,10 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
-from .models import YandexMapModel, Placemark
+from .models import YandexMaps, Placemark
 
 
-class YandexMapForm(forms.ModelForm):
+class YandexMapsForm(forms.ModelForm):
     zoom = forms.IntegerField(label=_('Zoom'), initial=12, min_value=0, max_value=23)
     min_zoom = forms.IntegerField(label=_('Minimum zoom'), initial=0, min_value=0, max_value=23)
     max_zoom = forms.IntegerField(label=_('Maximum zoom'), initial=23, min_value=0, max_value=23)
@@ -16,7 +16,7 @@ class YandexMapForm(forms.ModelForm):
     center_lg = forms.DecimalField(label=_('Longitude'), initial=37.64, min_value=-180, max_value=180, decimal_places=7)
  
     class Meta:
-        model = YandexMapModel
+        model = YandexMaps
         fields = '__all__'
 
 

@@ -1,6 +1,4 @@
-import os
 import os.path
-from tabnanny import verbose
 
 from cms.models import CMSPlugin
 from django.conf import settings
@@ -19,7 +17,7 @@ COLORS = (('blue', _('Blue')), ('red', _('Red')), ('darkOrange', _('Dark orange'
 
 
 
-class YandexMapModel(CMSPlugin):
+class YandexMaps(CMSPlugin):
     """
     A yandex maps integration
     """
@@ -122,7 +120,7 @@ def upload_path_handler(instance, filename):
 
 
 class Placemark(models.Model):
-    map = models.ForeignKey(YandexMapModel)
+    map = models.ForeignKey(YandexMaps)
 
     title = models.CharField(_("Title"), max_length=50, blank=True, null=True)
 
