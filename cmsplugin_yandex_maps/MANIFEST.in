@@ -1,3 +1,0 @@
-recursive-include cmsplugin_yandex_maps/templates *
-recursive-include cmsplugin_yandex_maps/static *
-recursive-include cmsplugin_yandex_maps/locale *
