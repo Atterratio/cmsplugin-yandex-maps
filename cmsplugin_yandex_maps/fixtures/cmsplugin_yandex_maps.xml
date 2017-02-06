@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<django-objects version="1.0">
+    <object model="cmsplugin_yandex_maps.behavior" pk="1">
+        <field name="behavior" type="CharField">drag</field>
+        <field name="description" type="CharField">перетаскивание карты с помощью мыши либо одиночного касания</field>
+    </object>
+    <object model="cmsplugin_yandex_maps.behavior" pk="2">
+        <field name="behavior" type="CharField">dblClickZoom</field>
+        <field name="description" type="CharField">масштабирование карты двойным щелчком кнопки мыши</field>
+    </object>
+    <object model="cmsplugin_yandex_maps.behavior" pk="3">
+        <field name="behavior" type="CharField">multiTouch</field>
+        <field name="description" type="CharField">масштабирование карты мультисенсорным касанием</field>
+    </object>
+    <object model="cmsplugin_yandex_maps.behavior" pk="4">
+        <field name="behavior" type="CharField">scrollZoom</field>
+        <field name="description" type="CharField">масштабирование карты колесом мыши</field>
+    </object>
+    <object model="cmsplugin_yandex_maps.behavior" pk="5">
+        <field name="behavior" type="CharField">leftMouseButtonMagnifier</field>
+        <field name="description" type="CharField">масштабирование карты при выделении области левой кнопкой мыши</field>
+    </object>
+    <object model="cmsplugin_yandex_maps.behavior" pk="6">
+        <field name="behavior" type="CharField">rightMouseButtonMagnifier</field>
+        <field name="description" type="CharField">масштабирование карты при выделении области правой кнопкой мыши</field>
+    </object>
+    <object model="cmsplugin_yandex_maps.behavior" pk="7">
+        <field name="behavior" type="CharField">ruler</field>
+        <field name="description" type="CharField">позволяет отмечать на карте точки и отображать расстояния между ними</field>
+    </object>
+    <object model="cmsplugin_yandex_maps.behavior" pk="8">
+        <field name="behavior" type="CharField">routeEditor</field>
+        <field name="description" type="CharField">редактор маршрутов</field>
+    </object>
+    <object model="cmsplugin_yandex_maps.control" pk="1">
+        <field name="control" type="CharField">geolocationControl</field>
+        <field name="description" type="CharField">добавление на карту кнопки геолокации</field>
+    </object>
+    <object model="cmsplugin_yandex_maps.control" pk="2">
+        <field name="control" type="CharField">searchControl</field>
+        <field name="description" type="CharField">добавление на карту поисковой строки</field>
+    </object>
+    <object model="cmsplugin_yandex_maps.control" pk="3">
+        <field name="control" type="CharField">routeEditor</field>
+        <field name="description" type="CharField">добавление на карту редактора маршрута</field>
+    </object>
+    <object model="cmsplugin_yandex_maps.control" pk="4">
+        <field name="control" type="CharField">trafficControl</field>
+        <field name="description" type="CharField">добавление на карту элемента управления «Пробки»</field>
+    </object>
+    <object model="cmsplugin_yandex_maps.control" pk="5">
+        <field name="control" type="CharField">typeSelector</field>
+        <field name="description" type="CharField">добавление на карту переключателя типа карты</field>
+    </object>
+    <object model="cmsplugin_yandex_maps.control" pk="6">
+        <field name="control" type="CharField">fullscreenControl</field>
+        <field name="description" type="CharField">добавление на карту кнопки переключения полноэкранного режима</field>
+    </object>
+    <object model="cmsplugin_yandex_maps.control" pk="7">
+        <field name="control" type="CharField">zoomControl</field>
+        <field name="description" type="CharField">добавление на карту панели изменения масштаба</field>
+    </object>
+    <object model="cmsplugin_yandex_maps.control" pk="8">
+        <field name="control" type="CharField">rulerControl</field>
+        <field name="description" type="CharField">добавление на карту элементов управления для измерения расстояний</field>
+    </object>
+</django-objects>

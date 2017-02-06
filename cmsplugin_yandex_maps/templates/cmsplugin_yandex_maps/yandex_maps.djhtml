@@ -1,0 +1,151 @@
+'{% load i18n sekizai_tags %}
+
+<div class="cmsplugin-ya-maps {{ instance.classes }}">
+    <div>
+        <div id="map-{{ instance.id }}" ></div>
+    </div>
+</div>
+
+{% addtoblock "css" %}
+    <link rel="stylesheet" type="text/css" href="https://yastatic.net/bootstrap/3.3.4/css/bootstrap.min.css">
+{% endaddtoblock %}
+
+{% addtoblock "js" %}
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" type="text/javascript"></script>
+    <script src="http://api-maps.yandex.ru/2.1/?lang={{ instance.lang }}" type="text/javascript"></script>
+    <script>
+    var jqYM = jQuery.noConflict();
+        jqYM(document).ready(function(){
+            ya_map_{{ instance.id }}();
+            jqYM('#map-{{ instance.id }}').on('show', function(){
+                ya_map_{{ instance.id }}();
+            });
+        });
+        function ya_map_{{ instance.id }}() {
+            jqYM('#map-{{ instance.id }}').empty();
+
+            {% if instance.auto_size %}
+                jqYM('#map-{{ instance.id }}').parent().width('100%');
+                jqYM('#map-{{ instance.id }}').width(jqYM('#map-{{ instance.id }}').parent().width());
+                jqYM('#map-{{ instance.id }}').height(jqYM('#map-{{ instance.id }}').parent().width()/{{ instance.width }}*{{ instance.height }});
+            {% else %}
+                jqYM('#map-{{ instance.id }}').parent().width({{ instance.width }});
+                jqYM('#map-{{ instance.id }}').parent().height({{ instance.height }});
+                jqYM('#map-{{ instance.id }}').width({{ instance.width }});
+                jqYM('#map-{{ instance.id }}').height({{ instance.height }});
+            {% endif %}
+
+            ymaps.ready(function(){
+                var yaMap_{{ instance.id }} = new ymaps.Map('map-{{ instance.id }}', {
+                    center: [{{ instance.center_lt|stringformat:"f" }}, {{ instance.center_lg|stringformat:"f" }}],
+                    zoom: {{ instance.zoom }},
+                    type: 'yandex#{{ instance.map_type }}',
+                    behaviors: {{ behaviors|safe }},
+                    controls: {{ controls|safe }},
+                });
+                
+                {% if instance.auto_placement %}
+                    yaMap_{{ instance.id }}.options.set('minZoom', {{ instance.min_zoom }});
+                    yaMap_{{ instance.id }}.options.set('maxZoom', {{ instance.max_zoom }});
+                {% endif %}
+
+                {% if instance.route and placemarks.all|length > 1%}
+                    ymaps.route([{% for place in placemarks.all %}
+                                    {% if place.place_lt and place.place_lg %}
+                                        [{{ place.place_lt }}, {{ place.place_lg }}]
+                                    {% else %}
+                                        "{{ place.place }}"
+                                    {% endif%},
+                                {% endfor %}]).then(
+                        function (route) {
+                            yaMap_{{ instance.id }}.geoObjects.add(route);
+                            {% if instance.auto_placement %}
+                                {# It's not work on this API version #}
+                                yaMap_{{ instance.id }}.setBounds(yaMap_{{ instance.id }}.geoObjects.getBounds());
+                            {% endif %}
+                        });
+                {% else %}
+                    {% if instance.clusterisation %}
+                        var clusterer = new ymaps.Clusterer({preset: "{{ instance.cluster_preset }}",
+                                                            {% if instance.cluster_disable_click_zoom %}
+                                                                clusterDisableClickZoom: true,
+                                                            {% endif %}
+                        });
+                    {% else %}
+                        var collection = new ymaps.GeoObjectCollection();
+                    {% endif%}
+                    {% for place in placemarks.all %}
+                        function create_placemark_{{ place.id }}(coordinates){
+                            var placemark = new ymaps.Placemark(coordinates,{
+                                {% if place.icon_style == 'default' %}
+                                    iconContent: "{{ forloop.counter }}",
+                                {% elif place.icon_style == 'stretchy' or place.icon_caption %}
+                                    iconContent: "{{ place.title }}",
+                                {% endif%}
+                                hintContent: "{{ place.hint }}",
+                                balloonContent: "{{ place.balloon }}",
+                                {% if place.balloonHeader %}
+                                    balloonContentHeader: "{{ place.balloonHeader|safe }}",
+                                {% endif %}
+                                {% if place.balloonHeader %}
+                                    balloonContentBody: "{{ place.balloonBody|safe }}",
+                                {% endif %}
+                                {% if place.balloonHeader %}
+                                    balloonContentFooter: "{{ place.balloonFooter|safe }}",
+                                {% endif %}
+                            }, {
+                                {% if place.icon_style == "image"  and place.icon_image %}
+                                    {% if place.icon_caption %}
+                                        iconLayout: 'default#imageWithContent',
+                                    {% else %}
+                                        iconLayout: 'default#image',
+                                    {% endif%}
+                                    iconImageHref: "{{ place.icon_image.url }}",
+                                    {% if place.icon_caption %}
+                                        iconContentOffset: [{{ place.icon_content_offset_horizontal }},
+                                                         {{ place.icon_content_offset_vertical }}],
+                                    {% endif %}
+                                    iconImageSize: [{{ place.icon_width }}, {{ place.icon_height }}],
+                                    iconImageOffset: [{{ place.icon_offset_horizontal }},
+                                                         {{ place.icon_offset_vertical }}],
+                                {% else %}
+                                    preset: "{{ place.marker_preset }}",
+                                {% endif %}
+                            });
+                            return placemark;
+                        }
+
+                        {% if place.auto_coordinates %}
+                            var geocoder = ymaps.geocode("{{ place.place }}");
+                            var coor = []
+                            geocoder.then(function (res) {
+                                {% if instance.clusterisation %}
+                                    clusterer.add(create_placemark_{{ place.id }}(res.geoObjects.get(0).geometry.getCoordinates()));
+                                {% else %}
+                                    collection.add(create_placemark_{{ place.id }}(res.geoObjects.get(0).geometry.getCoordinates()));
+                                {% endif%}
+                                {% if instance.auto_placement and forloop.first %}
+                                    yaMap_{{ instance.id }}.setBounds(yaMap_{{ instance.id }}.geoObjects.getBounds(), {checkZoomRange:true, zoomMargin:50});
+                                {% endif %}
+                            });
+                        {% else %}
+                            {% if instance.clusterisation %}
+                                clusterer.add(create_placemark_{{ place.id }}([{{ place.place_lt }},{{ place.place_lg }}]));
+                            {% else %}
+                                collection.add(create_placemark_{{ place.id }}([{{ place.place_lt }},{{ place.place_lg }}]));
+                            {% endif%}
+                            {% if instance.auto_placement and forloop.first %}
+                                yaMap_{{ instance.id }}.setBounds(yaMap_{{ instance.id }}.geoObjects.getBounds(), {checkZoomRange:true, zoomMargin:50});
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                    {% if instance.clusterisation %}
+                        yaMap_{{ instance.id }}.geoObjects.add(clusterer);
+                    {% else %}
+                        yaMap_{{ instance.id }}.geoObjects.add(collection);
+                    {% endif %}
+                {% endif %}
+            });
+        }
+    </script>
+{% endaddtoblock %}
