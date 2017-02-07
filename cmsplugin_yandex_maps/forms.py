@@ -45,9 +45,9 @@ class YandexMapsForm(forms.ModelForm):
 
 class PlacemarkForm(forms.ModelForm):
     place_lt = forms.DecimalField(label=_('Latitude'), required=False, min_value=-90,
-                                  max_value=90, decimal_places=7)
+                                  max_value=90, decimal_places=14)
     place_lg = forms.DecimalField(label=_('Longitude'), required=False, min_value=-180,
-                                  max_value=180, decimal_places=7)
+                                  max_value=180, decimal_places=14)
 
     icon_width = forms.IntegerField(label=_('Icon width'), initial=30, min_value=1)
     icon_height = forms.IntegerField(label=_('Icon height'), initial=30, min_value=1)
@@ -81,9 +81,9 @@ class PlacemarkForm(forms.ModelForm):
             if not place:
                 self.add_error('place', forms.ValidationError(forms.fields.Field.default_error_messages['required']))
         else:
-            if place_lt is None:
+            if not place_lt:
                 self.add_error('place_lt', forms.ValidationError(forms.fields.Field.default_error_messages['required']))
-            if place_lg is None:
+            if not place_lg:
                 self.add_error('place_lg', forms.ValidationError(forms.fields.Field.default_error_messages['required']))
 
         icon_style = cleaned_data['icon_style']
