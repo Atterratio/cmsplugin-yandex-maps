@@ -2,7 +2,7 @@ cmsplugin-yandex-maps
 ===========
 Rich functionality Yandex Maps plugin for Django-CMS
 
-v0.1.0
+v0.1.1
 -------
 
 Rich functionality Yandex Maps plugin for Django-CMS
@@ -28,3 +28,9 @@ FEATURES
 * size tweak
 * hack for hidden ellements like modal, accordion, carousel
 * routing(ugly)
+
+Changelog
+-------
+#####v0.1.1:
+* fix crash on set place latitude and longitude
+* fix not blank Behaviors and Controls

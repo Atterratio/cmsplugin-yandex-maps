@@ -76,11 +76,13 @@ class YandexMaps(CMSPlugin):
                  ('select', 'Select'), ('submit', 'Submit'))
     jq_event = models.CharField(_('jQuery event'), max_length=15, choices=JQ_EVENTS, default='click')
 
-    behaviors = models.ManyToManyField('Behavior', verbose_name=_('Behaviors'), default=(1, 2, 3, 4, 6),
-                                    help_text = _("Sorry for the Russian, I'm too lazy and just copied the description from the documentation"))
+    behaviors = models.ManyToManyField('Behavior', verbose_name=_('Behaviors'),
+                                       default=(1, 2, 3, 4, 6), blank=True,
+                                       help_text = _("Sorry for the Russian, I'm too lazy and just copied the description from the documentation"))
 
-    controls = models.ManyToManyField('Control', verbose_name=_('Controls'), default=(5, 6, 7),
-                                    help_text = _("Sorry for the Russian, I'm too lazy and just copied the description from the documentation"))
+    controls = models.ManyToManyField('Control', verbose_name=_('Controls'),
+                                      default=(5, 6, 7), blank=True,
+                                      help_text = _("Sorry for the Russian, I'm too lazy and just copied the description from the documentation"))
 
     classes = models.TextField(verbose_name=_('CSS classes'), blank=True)
 

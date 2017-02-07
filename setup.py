@@ -2,12 +2,13 @@ from codecs import open
 from os import path
 
 from setuptools import setup, find_packages
+from cmsplugin_yandex_maps import __version__
 
 here = path.abspath(path.dirname(__file__))
 
 setup(
     name='cmsplugin-yandex-maps',
-    version='0.1.0',
+    version=__version__,
     url='https://github.com/Atterratio/cmsplugin-yandex-maps',
     license='MIT',
     author='Aeternus Atterratio',
