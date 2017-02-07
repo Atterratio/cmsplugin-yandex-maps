@@ -83,6 +83,8 @@ class YandexMaps(CMSPlugin):
                                     help_text = _("Sorry for the Russian, I'm too lazy and just copied the description from the documentation"))
 
     classes = models.TextField(verbose_name=_('CSS classes'), blank=True)
+    
+    placemarks = models.ManyToManyField()
 
 
     @property
@@ -138,6 +140,7 @@ def upload_path_handler(instance, filename):
             'fn': slugify(unidecode(fn)), 'ext': slugify(unidecode(ext))}
 
     return path
+
 
 
 class Placemark(models.Model):

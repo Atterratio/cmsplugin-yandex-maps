@@ -8,7 +8,7 @@ from .models import YandexMaps, Behavior, Control, Placemark
 
 
 
-class PlacemarkAdmin(admin.StackedInline):
+class PlacemarkInlineAdmin(admin.StackedInline):
     model = Placemark
     extra = 0
     form = PlacemarkForm
@@ -27,6 +27,28 @@ class PlacemarkAdmin(admin.StackedInline):
     ]
 
 
+
+class PlacemarkAdmin(admin.ModelAdmin):
+    model = Placemark
+    extra = 0
+    form = PlacemarkForm
+    fieldsets = [
+        (None, {'fields': ['map', 'title', 'auto_coordinates',
+                           'place',('place_lt', 'place_lg')]}),
+        (_('Text'), {'fields': [('hint', 'balloon')]}),
+        (_('Rich text'), {'fields': ['balloonHeader', 'balloonBody', 'balloonFooter'],
+                           'classes': ['collapse']}),
+        (_('Icon'), {'fields': [('icon_style', 'icon_color', 'icon_glif', 'icon_image'),
+                                ('icon_caption', 'icon_circle'),
+                                ('icon_width', 'icon_height'),
+                                ('icon_offset_horizontal', 'icon_offset_vertical'),
+                                ('icon_content_offset_horizontal', 'icon_content_offset_vertical')],
+                     'classes': ['collapse']})
+    ]
+
+
+
+admin.site.register(Placemark, PlacemarkAdmin)
 admin.site.register(Behavior)
 admin.site.register(Control)
 
