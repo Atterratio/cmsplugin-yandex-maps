@@ -42,7 +42,7 @@
                 {% if instance.route and placemarks.all|length > 1 %}
                     ymaps.route([{% for place in placemarks.all %}
                                     {% if place.place_lt and place.place_lg %}
-                                        [{{ place.place_lt }}, {{ place.place_lg }}]
+                                        [{{ place.place_lt|stringformat:"f" }}, {{ place.place_lg|stringformat:"f" }}]
                                     {% else %}
                                         "{{ place.place }}"
                                     {% endif%},
@@ -122,14 +122,14 @@
                             });
                         {% else %}
                             {% if instance.clusterisation %}
-                                clusterer.add(create_placemark_{{ place.id }}([{{ place.place_lt }},{{ place.place_lg }}]));
+                                clusterer.add(create_placemark_{{ place.id }}([{{ place.place_lt|stringformat:"f" }},{{ place.place_lg|stringformat:"f" }}]));
                             {% else %}
-                                collection.add(create_placemark_{{ place.id }}([{{ place.place_lt }},{{ place.place_lg }}]));
+                                collection.add(create_placemark_{{ place.id }}([{{ place.place_lt|stringformat:"f" }},{{ place.place_lg|stringformat:"f" }}]));
                             {% endif%}
                             {% if instance.auto_placement and forloop.first and placemarks.all|length > 1 %}
                                 yaMap_{{ instance.id }}.setBounds(yaMap_{{ instance.id }}.geoObjects.getBounds(), {checkZoomRange:true, zoomMargin:50});
                             {% elif placemarks.all|length > 0 %}
-                                yaMap_{{ instance.id }}.setCenter([place.place_lt, [place.place_lg]);
+                                yaMap_{{ instance.id }}.setCenter([{{ place.place_lt|stringformat:"f" }}, {{ place.place_lg|stringformat:"f" }}]);
                             {% endif %}
                         {% endif %}
                     {% endfor %}
