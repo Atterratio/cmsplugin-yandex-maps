@@ -18,7 +18,7 @@ class PlacemarkAdmin(admin.StackedInline):
         (_('Text'), {'fields': [('hint', 'balloon')]}),
         (_('Rich text'), {'fields': ['balloonHeader', 'balloonBody', 'balloonFooter'],
                            'classes': ['collapse']}),
-        (_('Icon'), {'fields': ['icon_style', 'icon_color', 'icon_glif', 'icon_image',
+        (_('Icon'), {'fields': [('icon_style', 'icon_color', 'icon_glif', 'icon_image'),
                                 ('icon_caption', 'icon_circle'),
                                 ('icon_width', 'icon_height'),
                                 ('icon_offset_horizontal', 'icon_offset_vertical'),
@@ -38,7 +38,11 @@ class YandexMapsPlugin(CMSPluginBase):
     render_template = "cmsplugin_yandex_maps/yandex_maps.djhtml"
     fieldsets = [
         (None, {'fields': ['route', 'title', 'map_type']}),
-        (_('Size'), {'fields': ['auto_size', ('width', 'height')]}),
+        (_('Sizing'), {'fields': ['sizing', 
+                                  ('width', 'height'),
+                                  'size_update_method',
+                                  ('jq_selector', 'jq_event')],
+                               'classes': ['collapse']}),
         (_('Clusterisation'), {'fields': [('clusterisation', 'cluster_disable_click_zoom'),
                                           ('cluster_icon', 'cluster_color')],
                                'classes': ['collapse']}),

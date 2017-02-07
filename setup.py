@@ -7,7 +7,7 @@ here = path.abspath(path.dirname(__file__))
 
 setup(
     name='cmsplugin-yandex-maps',
-    version='0.0.1',
+    version='0.1.0',
     url='https://github.com/Atterratio/cmsplugin-yandex-maps',
     license='MIT',
     author='Aeternus Atterratio',

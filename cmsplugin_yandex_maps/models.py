@@ -7,7 +7,9 @@ from django.db.models.signals import pre_save, post_delete
 from django.dispatch import receiver
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import pgettext_lazy, ngettext_lazy
 from unidecode import unidecode
+from cms.utils.conf import default
 
 
 COLORS = (('blue', _('Blue')), ('red', _('Red')), ('darkOrange', _('Dark orange')), ('night', _('Night')),
@@ -31,7 +33,7 @@ class YandexMaps(CMSPlugin):
                                 help_text = _('Create route between points (unstable)'))
 
     clusterisation = models.BooleanField(_('Clusterisation'), default=True)
-    cluster_disable_click_zoom = models.BooleanField(_('Disable click zoom'), default=True)
+    cluster_disable_click_zoom = models.BooleanField(_('Disable cluster click zoom'), default=True)
     CLUSTER_ICON = (('default', _('Default')), ('inverted', _('Inverted')))
     cluster_icon = models.CharField(_('Cluster icon'), max_length=8, choices=CLUSTER_ICON,
                                     default='default')
@@ -44,26 +46,41 @@ class YandexMaps(CMSPlugin):
             ('tr_TR', 'Türk'))
     lang = models.CharField(_('Language'), max_length=5, choices=LANG, default='ru_RU')
 
-    auto_placement = models.BooleanField(_('Auto placement'), default=True)
+    auto_placement = models.BooleanField(_('Auto placement'), default=True,
+                                         help_text = _('Automatically find the center and zoom'))
     zoom = models.IntegerField(_('Zoom'), default=12)
     min_zoom = models.IntegerField(_('Minimum zoom'), default=0)
     max_zoom = models.IntegerField(_('Maximum zoom'), default=23)
     center_lt = models.FloatField(_('Latitude'), default=55.76)
     center_lg = models.FloatField(_('Longitude'), default=37.64)
-
-    auto_size = models.BooleanField(_('Auto size'), default=True,
-                                    help_text = _('If checked, the map will try to take all \
-                                    available width, keeping aspect ratio'))
-    width = models.IntegerField(_('Width'))
-    height = models.IntegerField(_('Height'))
+    
+    SIZING = (('aspect', _('Keep aspect')),
+              ('static', _('Static')),
+              ('auto', pgettext_lazy('Like automatisation', 'Auto')))
+    sizing = models.CharField(_('Sizing'), max_length=6, choices=SIZING, default='aspect')
+    width = models.IntegerField(_('Width'), default=320)
+    height = models.IntegerField(_('Height'), default=180)
+    UPDATE_METHOD = (('observer', 'MutationObserver'),
+                     ('jq_event', _('jQuery event')))
+    size_update_method = models.CharField(_('Size update method'), max_length=8,
+                                          choices=UPDATE_METHOD, blank=True, null=True,
+                                          help_text = _('MutationObserver may be slow,not all events work, enable only if work not proper with hidden object'))
+    jq_selector = models.CharField(_('jQuery selector'), max_length=300, blank=True, null=True)
+    JQ_EVENTS = (('blur', 'Blur'), ('change', 'Change'), ('click', 'Click'),
+                 ('contextmenu', 'Contextmenu'), ('dblclick', 'Dblclick'), ('focus', 'Focus'),
+                 ('focusin', 'Focusin'), ('focusout', 'Focusout'), ('hover', 'Hover'),
+                 ('keydown', 'Keydown'), ('keypress', 'Keypress'), ('keyup', 'Keyup'),
+                 ('load', 'Load'), ('mousedown', 'Mousedown'), ('mouseenter', 'Mousedown'),
+                 ('mouseleave', 'Mouseleave'), ('mousemove', 'Mousemove'), ('mouseout', 'Mouseout'),
+                 ('mouseover', 'Mouseover'), ('mouseup', 'Mouseup'), ('scroll', 'Scroll'),
+                 ('select', 'Select'), ('submit', 'Submit'))
+    jq_event = models.CharField(_('jQuery event'), max_length=15, choices=JQ_EVENTS, default='click')
 
     behaviors = models.ManyToManyField('Behavior', verbose_name=_('Behaviors'), default=(1, 2, 3, 4, 6),
-                                    help_text = _("Sorry for the Russian, I'm too lazy and just \
-                                    copied the description from the documentation"))
+                                    help_text = _("Sorry for the Russian, I'm too lazy and just copied the description from the documentation"))
 
     controls = models.ManyToManyField('Control', verbose_name=_('Controls'), default=(5, 6, 7),
-                                    help_text = _("Sorry for the Russian, I'm too lazy and just \
-                                    copied the description from the documentation"))
+                                    help_text = _("Sorry for the Russian, I'm too lazy and just copied the description from the documentation"))
 
     classes = models.TextField(verbose_name=_('CSS classes'), blank=True)
 
@@ -88,6 +105,10 @@ class YandexMaps(CMSPlugin):
 
     def __str__(self):
         return self.title
+    
+    
+    class Meta:
+         verbose_name = "Yandex Maps"
 
 
 
@@ -137,13 +158,13 @@ class Placemark(models.Model):
     icon_circle = models.BooleanField(_('Circle icon'), default=False)
     icon_caption = models.BooleanField(_('Caption'), default=False)
     ICON_GLIF = (('Home', _('Home')), ('Airport', _('Airport')), ('Bar', _('Bar')), ('Food', _('Food')),
-                 ('Cinema', _('Cinema')), ('MassTransit', _('Mass Transit')), ('Toile', _('Toile')), ('Beach', _('Beach')),
+                 ('Cinema', _('Cinema')), ('MassTransit', _('Mass Transit')), ('Toilet', _('Toilet')), ('Beach', _('Beach')),
                  ('Zoo', _('Zoo')), ('Underpass', _('Underpass')), ('Run', _('Run')), ('Bicycle', _('Bicycle')), ('Bicycle2', _('Bicycle2')),
                  ('Garden', _('Garden')), ('Observation', _('Observation')), ('Entertainment', _('Entertainment')),
                  ('Family', _('Family')), ('Theater', _('Theater')), ('Book', _('Book')), ('Waterway', _('Waterway')),
                  ('RepairShop', _('Repair Shop')), ('Post', _('Post')), ('WaterPark', _('Water Park')), ('Worship', _('Worship')),
                  ('Fashion', _('Fashion')), ('Waste', _('Waste')), ('Money', _('Money')), ('Hydro', _('Hydro')),
-                 ('Science', _('Science')), ('Auto', _('Auto')), ('Shopping', _('Shopping')), ('Sport', _('Sport')),
+                 ('Science', _('Science')), ('Auto', pgettext_lazy('Like Car', 'Auto')), ('Shopping', _('Shopping')), ('Sport', _('Sport')),
                  ('Video', _('Video')), ('Railway', _('Railway')), ('Park', _('Park')), ('Pocket', _('Pocket')),
                  ('NightClub', _('Night Club')), ('Pool', _('Pool')), ('Medical', _('Medical')), ('Vegetation', _('Vegetation')),
                  ('Government', _('Government')), ('Circus', _('Circus')), ('RapidTransit', _('Rapid Transit')), ('Education', _('Education')),
@@ -166,8 +187,7 @@ class Placemark(models.Model):
     balloonHeader = models.TextField(_('Balloon header'), blank=True,
                                     help_text = _("Can use some html, please be careful!"))
     balloonBody = models.TextField(_('Balloon body'), blank=True,
-                                    help_text = _('Replace "Balloon content". \
-                                    Can use some html, please be careful!'))
+                                    help_text = _('Replace "Balloon content". Can use some html, please be careful!'))
     balloonFooter = models.TextField(_('Balloon footer'), blank=True,
                                     help_text = _("Can use some html, please be careful!"))
 
@@ -200,6 +220,11 @@ class Placemark(models.Model):
 
     def __str__(self):
         return "Map «%s» — %s" % (self.map.title, self.title)
+    
+    
+    class Meta:
+        verbose_name = _("Placemark")
+        verbose_name_plural = _("Placemarks")
 
 
 @receiver(pre_save, sender=Placemark)
