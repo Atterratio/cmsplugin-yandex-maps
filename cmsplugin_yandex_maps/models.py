@@ -100,7 +100,7 @@ class YandexMaps(CMSPlugin):
     def copy_relations(self, oldinstance):
         self.behaviors = oldinstance.behaviors.all()
         self.controls = oldinstance.controls.all()
-        self.placemarks = self.placemarks.all()
+        self.placemarks = oldinstance.placemarks.all()
     
     
     def __str__(self):
