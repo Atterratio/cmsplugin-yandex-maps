@@ -1,39 +1,29 @@
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 from django.contrib import admin
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ngettext_lazy
 
 from .forms import YandexMapsForm, PlacemarkForm
 from .models import YandexMaps, Behavior, Control, Placemark
 
 
 
-class PlacemarkInlineAdmin(admin.StackedInline):
-    model = Placemark
+class PlacemarksInlineAdmin(admin.StackedInline):
+    model = YandexMaps.placemarks.through
     extra = 0
-    form = PlacemarkForm
-    fieldsets = [
-        (None, {'fields': ['map', 'title', 'auto_coordinates',
-                           'place',('place_lt', 'place_lg')]}),
-        (_('Text'), {'fields': [('hint', 'balloon')]}),
-        (_('Rich text'), {'fields': ['balloonHeader', 'balloonBody', 'balloonFooter'],
-                           'classes': ['collapse']}),
-        (_('Icon'), {'fields': [('icon_style', 'icon_color', 'icon_glif', 'icon_image'),
-                                ('icon_caption', 'icon_circle'),
-                                ('icon_width', 'icon_height'),
-                                ('icon_offset_horizontal', 'icon_offset_vertical'),
-                                ('icon_content_offset_horizontal', 'icon_content_offset_vertical')],
-                     'classes': ['collapse']})
-    ]
+    
+    verbose_name = _('Placemark')
+    verbose_name_plural = ngettext_lazy("Placemark", "Placemarks", 1)
 
 
 
+@admin.register(Placemark)
 class PlacemarkAdmin(admin.ModelAdmin):
-    model = Placemark
-    extra = 0
     form = PlacemarkForm
+    inlines = [PlacemarksInlineAdmin, ]
     fieldsets = [
-        (None, {'fields': ['map', 'title', 'auto_coordinates',
+        (None, {'fields': ['title', 'auto_coordinates',
                            'place',('place_lt', 'place_lg')]}),
         (_('Text'), {'fields': [('hint', 'balloon')]}),
         (_('Rich text'), {'fields': ['balloonHeader', 'balloonBody', 'balloonFooter'],
@@ -47,19 +37,26 @@ class PlacemarkAdmin(admin.ModelAdmin):
     ]
 
 
+    class Media:
+        js = ('https://code.jquery.com/jquery-3.1.1.slim.min.js',
+              'cmsplugin_yandex_maps/js/PlacemarkAdmin.js')
 
-admin.site.register(Placemark, PlacemarkAdmin)
+
+
 admin.site.register(Behavior)
 admin.site.register(Control)
 
 
 
+@plugin_pool.register_plugin
 class YandexMapsPlugin(CMSPluginBase):
+    inlines = (PlacemarksInlineAdmin, )
+    form = YandexMapsForm
     model = YandexMaps
     name = _("Yandex Maps Plugin")
     render_template = "cmsplugin_yandex_maps/yandex_maps.djhtml"
     fieldsets = [
-        (None, {'fields': ['route', 'title', 'map_type']}),
+        (None, {'fields': ['title', 'map_type']}),
         (_('Sizing'), {'fields': ['sizing', 
                                   ('width', 'height'),
                                   'size_update_method',
@@ -72,17 +69,19 @@ class YandexMapsPlugin(CMSPluginBase):
                                     'zoom',
                                     ('center_lt', 'center_lg')],
                           'classes': ['collapse']}),
-        (_('Advanced'), {'fields': ['lang',
+        (_('Advanced'), {'fields': ['route',
+                                    'lang',
                                     'behaviors',
                                     'controls',
                                     ('min_zoom', 'max_zoom'),
                                     'classes'],
                          'classes': ['collapse']}),
     ]
-    inlines = (PlacemarkAdmin, )
-    form = YandexMapsForm
+    exclude = ['placemarks', ]
+
+
     class Media:
-        js = ('cmsplugin_yandex_maps/js/admin.js',)
+        js = ('cmsplugin_yandex_maps/js/YandexMapsAdmin.js',)
 
 
     def render(self, context, instance, placeholder):
@@ -97,9 +96,6 @@ class YandexMapsPlugin(CMSPluginBase):
             controls.append(control.control)
         context.update({'controls': controls})
 
-        context.update({'placemarks': instance.placemark_set.all()})
+        context.update({'placemarks': instance.placemarks.all()})
 
         return context
-
-
-plugin_pool.register_plugin(YandexMapsPlugin)
