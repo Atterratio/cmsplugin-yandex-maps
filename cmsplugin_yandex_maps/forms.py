@@ -1,3 +1,5 @@
+import re
+
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
@@ -25,10 +27,27 @@ class YandexMapsForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super(YandexMapsForm, self).clean()
+        route = cleaned_data['route']
+        print(self.data)
+        data = self.data
         size_update_method = cleaned_data['size_update_method']
         jq_selector = cleaned_data['jq_selector']
         jq_event = cleaned_data['jq_event']
         
+        if route:
+            placemarks = 0
+            pattern = re.compile("YandexMaps_placemarks-\d+-id")
+            delete = re.compile("YandexMaps_placemarks-\d+-DELETE")
+            for key in data:
+                if pattern.match(key):
+                    placemarks += 1
+                    
+                if delete.match(key):
+                    placemarks -= 1
+                    
+            if placemarks < 2:
+                self.add_error('route', _('To create route need at least two placemarks'))
+
         if size_update_method:
             if not jq_selector:
                 self.add_error('jq_selector', forms.ValidationError(forms.fields.Field.default_error_messages['required']))
@@ -36,6 +55,7 @@ class YandexMapsForm(forms.ModelForm):
         if size_update_method == 'jq_event':
             if not jq_event:
                 self.add_error('jq_event', forms.ValidationError(forms.fields.Field.default_error_messages['required']))
+
 
     class Meta:
         model = YandexMaps
@@ -66,9 +86,10 @@ class PlacemarkForm(forms.ModelForm):
 
     def clean_balloonBody(self):
         balloonBody = self.cleaned_data['balloonBody']
-        
+
         return balloonBody.replace('"', "'")
-        
+
+
     def clean(self):
         cleaned_data = super(PlacemarkForm, self).clean()
 
@@ -92,6 +113,7 @@ class PlacemarkForm(forms.ModelForm):
             self.add_error('icon_image', _('Image required'))
 
         return cleaned_data
+
 
     class Meta:
         model = Placemark

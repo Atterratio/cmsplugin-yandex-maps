@@ -6,10 +6,9 @@ from django.db import models
 from django.db.models.signals import pre_save, post_delete
 from django.dispatch import receiver
 from django.utils.text import slugify
+from django.utils.translation import pgettext_lazy, ungettext_lazy
 from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import pgettext_lazy, ngettext_lazy
 from unidecode import unidecode
-from cms.utils.conf import default
 
 
 COLORS = (('blue', _('Blue')), ('red', _('Red')), ('darkOrange', _('Dark orange')), ('night', _('Night')),
@@ -53,7 +52,7 @@ class YandexMaps(CMSPlugin):
     max_zoom = models.IntegerField(_('Maximum zoom'), default=23)
     center_lt = models.FloatField(_('Latitude'), default=55.76)
     center_lg = models.FloatField(_('Longitude'), default=37.64)
-    
+
     SIZING = (('aspect', _('Keep aspect')),
               ('static', _('Static')),
               ('auto', pgettext_lazy('Like automatisation', 'Auto')))
@@ -85,6 +84,9 @@ class YandexMaps(CMSPlugin):
                                       help_text = _("Sorry for the Russian, I'm too lazy and just copied the description from the documentation"))
 
     classes = models.TextField(verbose_name=_('CSS classes'), blank=True)
+    
+    placemarks = models.ManyToManyField('Placemark', blank=True,
+                                        verbose_name=ungettext_lazy("Placemark", "Placemarks", 1))
 
 
     @property
@@ -98,26 +100,22 @@ class YandexMaps(CMSPlugin):
     def copy_relations(self, oldinstance):
         self.behaviors = oldinstance.behaviors.all()
         self.controls = oldinstance.controls.all()
-        self.placemark_set.all().delete()
-        for placemark in oldinstance.placemark_set.all():
-            placemark.pk = None
-            placemark.map = self
-            placemark.save()
-
-
+        self.placemarks = self.placemarks.all()
+    
+    
     def __str__(self):
         return self.title
     
     
     class Meta:
-         verbose_name = "Yandex Maps"
+        verbose_name = _("Yandex Maps")
+        verbose_name_plural = _("Yandex Maps")
 
 
 
 class Behavior(models.Model):
     behavior = models.CharField(_("Behavior"), max_length=30, unique=True)
     description = models.CharField(_("Description"), max_length=300, blank=True, null=True)
-
 
     def __str__(self):
         return "%s | %s" % (self.behavior, self.description)
@@ -127,7 +125,6 @@ class Behavior(models.Model):
 class Control(models.Model):
     control = models.CharField(_("Control"), max_length=30, unique=True)
     description = models.CharField(_("Description"), max_length=300, blank=True, null=True)
-
 
     def __str__(self):
         return "%s | %s" % (self.control, self.description)
@@ -142,9 +139,8 @@ def upload_path_handler(instance, filename):
     return path
 
 
-class Placemark(models.Model):
-    map = models.ForeignKey(YandexMaps)
 
+class Placemark(models.Model):
     title = models.CharField(_("Title"), max_length=50, blank=True, null=True)
 
     auto_coordinates = models.BooleanField(_('Auto coordinates'), default=True)
@@ -221,12 +217,13 @@ class Placemark(models.Model):
 
 
     def __str__(self):
-        return "Map «%s» — %s" % (self.map.title, self.title)
-    
-    
+        return self.title
+
+
     class Meta:
-        verbose_name = _("Placemark")
-        verbose_name_plural = _("Placemarks")
+        verbose_name = ungettext_lazy("Placemark", "Placemarks", 1)
+        verbose_name_plural = ungettext_lazy("Placemark", "Placemarks", 2)
+
 
 
 @receiver(pre_save, sender=Placemark)
@@ -238,6 +235,7 @@ def delete_old_image(instance, **kwargs):
                 os.remove('%s/%s' % (settings.MEDIA_ROOT, old_instance.icon_image))
             except:
                 pass
+
 
 
 @receiver(post_delete, sender=Placemark)
