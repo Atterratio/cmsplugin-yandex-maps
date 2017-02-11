@@ -28,7 +28,6 @@ class YandexMapsForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super(YandexMapsForm, self).clean()
         route = cleaned_data['route']
-        print(self.data)
         data = self.data
         size_update_method = cleaned_data['size_update_method']
         jq_selector = cleaned_data['jq_selector']

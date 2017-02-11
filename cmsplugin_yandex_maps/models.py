@@ -31,14 +31,6 @@ class YandexMaps(CMSPlugin):
     route = models.BooleanField(_('Create route'), default=False,
                                 help_text = _('Create route between points (unstable)'))
 
-    clusterisation = models.BooleanField(_('Clusterisation'), default=True)
-    cluster_disable_click_zoom = models.BooleanField(_('Disable cluster click zoom'), default=True)
-    CLUSTER_ICON = (('default', _('Default')), ('inverted', _('Inverted')))
-    cluster_icon = models.CharField(_('Cluster icon'), max_length=8, choices=CLUSTER_ICON,
-                                    default='default')
-    cluster_color = models.CharField(_('Cluster icon color'), max_length=15, choices=COLORS,
-                                     default='red')
-
     LANG = (('ru_RU', 'Русский'),
             ('en_RU', 'English'),
             ('uk_UA', 'Українська'),
@@ -87,6 +79,12 @@ class YandexMaps(CMSPlugin):
     
     placemarks = models.ManyToManyField('Placemark', blank=True,
                                         verbose_name=ungettext_lazy("Placemark", "Placemarks", 1))
+    
+    collections = models.ManyToManyField('Collection', blank=True,
+                                        verbose_name=ungettext_lazy("Collection", "Collections", 1))
+    
+    clasters = models.ManyToManyField('Claster', blank=True,
+                                        verbose_name=ungettext_lazy("Claster" "Clasters", 1))
 
 
     @property
@@ -137,6 +135,35 @@ def upload_path_handler(instance, filename):
             'fn': slugify(unidecode(fn)), 'ext': slugify(unidecode(ext))}
 
     return path
+
+
+
+class Collection(models.Model):
+    title = models.CharField(_("Title"), max_length=50, blank=True, null=True)
+    placemarks = models.ManyToManyField('Placemark', blank=True,
+                                        verbose_name=ungettext_lazy("Placemark", "Placemarks", 1))
+
+
+    def __str__(self):
+        return self.title
+
+
+
+class Claster(models.Model):
+    title = models.CharField(_("Title"), max_length=50, blank=True, null=True)
+    placemarks = models.ManyToManyField('Placemark', blank=True,
+                                        verbose_name=ungettext_lazy("Placemark", "Placemarks", 1))
+    
+    disable_click_zoom = models.BooleanField(_('Disable click zoom'), default=True)
+    CLUSTER_ICON = (('default', _('Default')), ('inverted', _('Inverted')))
+    cluster_icon = models.CharField(_('Cluster icon'), max_length=8, choices=CLUSTER_ICON,
+                                    default='default')
+    cluster_color = models.CharField(_('Cluster icon color'), max_length=15, choices=COLORS,
+                                     default='red')
+
+
+    def __str__(self):
+        return self.title
 
 
 
