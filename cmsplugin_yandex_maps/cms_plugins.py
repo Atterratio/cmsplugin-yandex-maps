@@ -6,13 +6,13 @@ from django.utils.translation import ugettext_lazy as _
 
 from .forms import YandexMapsForm, PlacemarkForm
 from .models import YandexMaps
-from .admin import PlacemarksInlineAdmin, CollectionsInlineAdmin, ClastersInlineAdmin
+from .admin import PlacemarksInlineAdmin, CollectionsInlineAdmin, ClastersInlineAdmin, RoutesInlineAdmin
 
 
 
 @plugin_pool.register_plugin
 class YandexMapsPlugin(CMSPluginBase):
-    inlines = (PlacemarksInlineAdmin, CollectionsInlineAdmin, ClastersInlineAdmin)
+    inlines = (PlacemarksInlineAdmin, CollectionsInlineAdmin, ClastersInlineAdmin, RoutesInlineAdmin)
     form = YandexMapsForm
     model = YandexMaps
     name = _("Yandex Maps Plugin")
@@ -28,8 +28,7 @@ class YandexMapsPlugin(CMSPluginBase):
                                     'zoom',
                                     ('center_lt', 'center_lg')],
                           'classes': ['collapse']}),
-        (_('Advanced'), {'fields': ['route',
-                                    'lang',
+        (_('Advanced'), {'fields': ['lang',
                                     'behaviors',
                                     'controls',
                                     ('min_zoom', 'max_zoom'),
@@ -57,5 +56,24 @@ class YandexMapsPlugin(CMSPluginBase):
         context.update({'controls': controls})
 
         context.update({'placemarks': instance.placemarks.all()})
+        
+        context.update({'collections': instance.collections.all()})
+        
+        context.update({'clasters': instance.clasters.all()})
+        
+        routes = []
+        for route in instance.routes.all():
+            placemarks = route.placemarks.through.objects.filter(route=route).order_by('id')
+            viaIndexes = []
+            for i, place in enumerate(placemarks):
+                if place.placemark.point_type == "viaPoint":
+                    viaIndexes.append(i)
+                    
+            routes.append({'placemarks': placemarks, 'viaIndexes': viaIndexes, 'results': route.results,
+                           'routing_mode': route.routing_mode, 'route_collor': route.route_collor,
+                           'additional_routes_collor': route.additional_routes_collor,
+                           'avoid_traffic_jams': route.avoid_traffic_jams},)
+        
+        context.update({'routes': routes})
 
         return context
