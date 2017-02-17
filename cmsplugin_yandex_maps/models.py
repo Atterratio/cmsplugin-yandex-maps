@@ -400,9 +400,9 @@ class Placemark(models.Model):
             elif self.icon_circle:
                 return "islands#%(color)sCircleDotIcon" % {'color': self.icon_color}
             elif self.icon_caption:
-                return "islands#%(color)sDotIcon" % {'color': self.icon_color}
-            else:
                 return "islands#%(color)sDotIconWithCaption" % {'color': self.icon_color}
+            else:
+                return "islands#%(color)sDotIcon" % {'color': self.icon_color}
         elif self.icon_style == 'glif':
             if self.icon_circle:
                 return "islands#%(color)s%(glif)sCircleIcon" % {'color': self.icon_color, 'glif': self.icon_glif}
@@ -436,8 +436,8 @@ def delete_old_image(instance, **kwargs):
 
 
 
-@receiver(pre_save, sender=Placemark)
-@receiver(pre_save, sender=Collection)
+@receiver(post_delete, sender=Placemark)
+@receiver(post_delete, sender=Collection)
 def cleanup_image(instance, **kwargs):
     if instance.id:
         try:

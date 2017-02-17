@@ -80,10 +80,10 @@ class PlacemarkForm(forms.ModelForm):
 
     icon_width = forms.IntegerField(label=_('Icon width'), initial=30, min_value=1)
     icon_height = forms.IntegerField(label=_('Icon height'), initial=30, min_value=1)
-    icon_offset_horizontal = forms.IntegerField(label=_('Icon offset horizontal'), initial=0, min_value=0)
-    icon_offset_vertical = forms.IntegerField(label=_('Icon offset vertical'), initial=0, min_value=0)
-    icon_content_offset_horizontal = forms.IntegerField(label=_('Icon content offset horizontal'), initial=0, min_value=0)
-    icon_content_offset_vertical = forms.IntegerField(label=_('Icon content offset vertical'), initial=0, min_value=0)
+    icon_offset_horizontal = forms.IntegerField(label=_('Icon offset horizontal'), initial=0)
+    icon_offset_vertical = forms.IntegerField(label=_('Icon offset vertical'), initial=0)
+    icon_content_offset_horizontal = forms.IntegerField(label=_('Icon content offset horizontal'), initial=0)
+    icon_content_offset_vertical = forms.IntegerField(label=_('Icon content offset vertical'), initial=0)
 
     balloonHeader = forms.CharField(label=_('Balloon header'), widget=forms.Textarea, required=False,
                                     help_text = _("Can use some html, please be careful!"))
@@ -95,21 +95,21 @@ class PlacemarkForm(forms.ModelForm):
 
     def clean_balloonHeader(self):
         balloonHeader = self.cleaned_data['balloonHeader']
-        balloonHeader = balloonHeader.replace('"', "'").replace('\n', '<br>')
+        balloonHeader = balloonHeader.replace("'", '"').replace('\n', '<br>')
         
         return balloonHeader
 
 
     def clean_balloonBody(self):
         balloonBody = self.cleaned_data['balloonBody']
-        balloonBody = balloonBody.replace('"', "'").replace('\n', '<br>')
+        balloonBody = balloonBody.replace("'", '"').replace('\r\n', '<br>').replace('\t', '')
         
         return balloonBody
 
 
     def clean_balloonFooter(self):
         balloonFooter = self.cleaned_data['balloonFooter']
-        balloonFooter = balloonFooter.replace('"', "'").replace('\n', '<br>')
+        balloonFooter = balloonFooter.replace("'", '"').replace('\n', '<br>')
         
         return balloonFooter
 
@@ -153,10 +153,10 @@ class PlacemarkForm(forms.ModelForm):
 class CollectionForm(forms.ModelForm):
     icon_width = forms.IntegerField(label=_('Icon width'), initial=30, min_value=1)
     icon_height = forms.IntegerField(label=_('Icon height'), initial=30, min_value=1)
-    icon_offset_horizontal = forms.IntegerField(label=_('Icon offset horizontal'), initial=0, min_value=0)
-    icon_offset_vertical = forms.IntegerField(label=_('Icon offset vertical'), initial=0, min_value=0)
-    icon_content_offset_horizontal = forms.IntegerField(label=_('Icon content offset horizontal'), initial=0, min_value=0)
-    icon_content_offset_vertical = forms.IntegerField(label=_('Icon content offset vertical'), initial=0, min_value=0)
+    icon_offset_horizontal = forms.IntegerField(label=_('Icon offset horizontal'), initial=0)
+    icon_offset_vertical = forms.IntegerField(label=_('Icon offset vertical'), initial=0)
+    icon_content_offset_horizontal = forms.IntegerField(label=_('Icon content offset horizontal'), initial=0)
+    icon_content_offset_vertical = forms.IntegerField(label=_('Icon content offset vertical'), initial=0)
 
 
     def clean(self):
@@ -185,10 +185,10 @@ class CollectionForm(forms.ModelForm):
 class ClasterForm(forms.ModelForm):
     icon_width = forms.IntegerField(label=_('Icon width'), initial=30, min_value=1)
     icon_height = forms.IntegerField(label=_('Icon height'), initial=30, min_value=1)
-    icon_offset_horizontal = forms.IntegerField(label=_('Icon offset horizontal'), initial=0, min_value=0)
-    icon_offset_vertical = forms.IntegerField(label=_('Icon offset vertical'), initial=0, min_value=0)
-    icon_content_offset_horizontal = forms.IntegerField(label=_('Icon content offset horizontal'), initial=0, min_value=0)
-    icon_content_offset_vertical = forms.IntegerField(label=_('Icon content offset vertical'), initial=0, min_value=0)
+    icon_offset_horizontal = forms.IntegerField(label=_('Icon offset horizontal'), initial=0)
+    icon_offset_vertical = forms.IntegerField(label=_('Icon offset vertical'), initial=0)
+    icon_content_offset_horizontal = forms.IntegerField(label=_('Icon content offset horizontal'), initial=0)
+    icon_content_offset_vertical = forms.IntegerField(label=_('Icon content offset vertical'), initial=0)
 
 
     def clean(self):

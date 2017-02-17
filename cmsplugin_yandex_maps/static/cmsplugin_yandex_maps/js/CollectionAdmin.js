@@ -18,6 +18,8 @@ $(document).ready(function(){
 			$('#collection_placemarks_set-group').hide();
 		} else if (referrer.indexOf('edit-plugin') != -1){
 			$('#yandexmaps_collections_set-group').hide();
+		} else if (referrer.indexOf('add-plugin') != -1){
+			$('#yandexmaps_collections_set-group').hide();
 		}
 	}
 });

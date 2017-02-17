@@ -28,6 +28,8 @@ $(document).ready(function(){
 			$('#route_placemarks_set-group').hide();
 		} else if (referrer.indexOf('edit-plugin') != -1){
 			$('#yandexmaps_routes_set-group').hide();
+		} else if (referrer.indexOf('add-plugin') != -1){
+			$('#yandexmaps_routes_set-group').hide();
 		}
 	}
 	results();

@@ -45,19 +45,19 @@
                             var placemark = new ymaps.Placemark(res.geoObjects.get(0).geometry, {
                                 {% if place.icon_style == 'default' %}
                                     iconContent: "{{ forloop.counter }}",
-                                {% elif place.icon_captionlace %}
+                                {% elif place.icon_caption %}
                                     iconContent: "{{ place.title }}",
                                 {% endif%}
                                 hintContent: "{{ place.hint }}",
                                 balloonContent: "{{ place.balloon }}",
                                 {% if place.balloonHeader %}
-                                    balloonContentHeader: "{{ place.balloonHeader|safe }}",
+                                    balloonContentHeader: '{{ place.balloonHeader|safe }}',
                                 {% endif %}
                                 {% if place.balloonBody %}
-                                    balloonContentBody: "{{ place.balloonBody|safe }}",
+                                    balloonContentBody: '{{ place.balloonBody|safe }}',
                                 {% endif %}
                                 {% if place.balloonFooter %}
-                                    balloonContentFooter: "{{ place.balloonFooter|safe }}",
+                                    balloonContentFooter: '{{ place.balloonFooter|safe }}',
                                 {% endif %}
                             }, {
                                 {% if place.icon_style == "image" and place.icon_image %}
@@ -87,19 +87,19 @@
                         var placemark = new ymaps.Placemark([{{ place.place_lt|stringformat:"f" }},{{ place.place_lg|stringformat:"f" }}], {
                             {% if place.icon_style == 'default' %}
                                 iconContent: "{{ forloop.counter }}",
-                            {% elif Repplace.icon_captionlace %}
+                            {% elif place.icon_caption %}
                                 iconContent: "{{ place.title }}",
                             {% endif%}
                             hintContent: "{{ place.hint }}",
                             balloonContent: "{{ place.balloon }}",
                             {% if place.balloonHeader %}
-                                balloonContentHeader: "{{ place.balloonHeader|safe }}",
+                                balloonContentHeader: '{{ place.balloonHeader|safe }}',
                             {% endif %}
                             {% if place.balloonBody %}
-                                balloonContentBody: "{{ place.balloonBody|safe }}",
+                                balloonContentBody: '{{ place.balloonBody|safe }}',
                             {% endif %}
                             {% if place.balloonFooter %}
-                                balloonContentFooter: "{{ place.balloonFooter|safe }}",
+                                balloonContentFooter: '{{ place.balloonFooter|safe }}',
                             {% endif %}
                         }, {
                             {% if place.icon_style == "image"  and place.icon_image %}
@@ -135,19 +135,19 @@
                                 var placemark = new ymaps.Placemark(res.geoObjects.get(0).geometry, {
                                     {% if place.icon_style == 'default' or collection.icon_style == 'default' %}
                                         iconContent: "{{ forloop.counter }}",
-                                    {% elif Repplace.icon_captionlace or collection.icon_style == 'stretchy' or collection.icon_caption %}
+                                    {% elif place.icon_caption or collection.icon_caption %}
                                         iconContent: "{{ place.title }}",
                                     {% endif%}
                                     hintContent: {% if collection.hint %}"{{ collection.hint }}"{% else %}"{{ place.hint }}"{% endif %},
                                     balloonContent: {% if collection.balloon %}"{{ collection.balloon }}"{% else %}"{{ place.balloon }}"{% endif %},
                                     {% if place.balloonHeader %}
-                                        balloonContentHeader: "{{ place.balloonHeader|safe }}",
+                                        balloonContentHeader: '{{ place.balloonHeader|safe }}',
                                     {% endif %}
                                     {% if place.balloonBody %}
-                                        balloonContentBody: "{{ place.balloonBody|safe }}",
+                                        balloonContentBody: '{{ place.balloonBody|safe }}',
                                     {% endif %}
                                     {% if place.balloonFooter %}
-                                        balloonContentFooter: "{{ place.balloonFooter|safe }}",
+                                        balloonContentFooter: '{{ place.balloonFooter|safe }}',
                                     {% endif %}
                                 }, {
                                     {% if not collection.icon_style %}
@@ -195,19 +195,19 @@
                             var placemark = new ymaps.Placemark([{{ place.place_lt|stringformat:"f" }},{{ place.place_lg|stringformat:"f" }}], {
                                     {% if place.icon_style == 'default' or collection.icon_style == 'default' %}
                                         iconContent: "{{ forloop.counter }}",
-                                    {% elif place.icon_captionlace or collection.icon_style == 'stretchy' or collection.icon_caption %}
+                                    {% elif place.icon_caption or collection.icon_caption %}
                                         iconContent: "{{ place.title }}",
                                     {% endif%}
                                     hintContent: {% if collection.hint %}"{{ collection.hint }}"{% else %}"{{ place.hint }}"{% endif %},
                                     balloonContent: {% if collection.balloon %}"{{ collection.balloon }}"{% else %}"{{ place.balloon }}"{% endif %},
                                     {% if place.balloonHeader %}
-                                        balloonContentHeader: "{{ place.balloonHeader|safe }}",
+                                        balloonContentHeader: '{{ place.balloonHeader|safe }}',
                                     {% endif %}
                                     {% if place.balloonBody %}
-                                        balloonContentBody: "{{ place.balloonBody|safe }}",
+                                        balloonContentBody: '{{ place.balloonBody|safe }}',
                                     {% endif %}
                                     {% if place.balloonFooter %}
-                                        balloonContentFooter: "{{ place.balloonFooter|safe }}",
+                                        balloonContentFooter: '{{ place.balloonFooter|safe }}',
                                     {% endif %}
                                 }, {
                                     {% if not collection.icon_style %}
@@ -254,31 +254,31 @@
                     {% endfor %}
                 {% endfor %}
                 {% for claster in clasters.all %}
-                    var claster = new ymaps.Clusterer({preset: "{{ claster.cluster_preset }}",
+                    var claster_{{ claster.id }} = new ymaps.Clusterer({preset: "{{ claster.cluster_preset }}",
                                                     {% if claster.disable_click_zoom %}
                                                         clusterDisableClickZoom: true,
                                                     {% endif %}
                                                     });
-                    yaMap_{{ instance.id }}.geoObjects.add(claster);
+                    yaMap_{{ instance.id }}.geoObjects.add(claster_{{ claster.id }});
                     {% for place in claster.placemarks.all %}
                         {% if place.auto_coordinates %}
                             ymaps.geocode("{{ place.place }}").then(function(res){
                                 var placemark = new ymaps.Placemark(res.geoObjects.get(0).geometry, {
                                     {% if place.icon_style == 'default' or claster.icon_style == 'default' %}
                                         iconContent: "{{ forloop.counter }}",
-                                    {% elif place.icon_captionlace or claster.icon_style == 'stretchy' or claster.icon_caption %}
+                                    {% elif place.icon_caption or claster.icon_caption %}
                                         iconContent: "{{ place.title }}",
                                     {% endif%}
                                     hintContent: {% if claster.hint %}"{{ claster.hint }}"{% else %}"{{ place.hint }}"{% endif %},
                                     balloonContent: {% if claster.balloon %}"{{ claster.balloon }}"{% else %}"{{ place.balloon }}"{% endif %},
                                     {% if place.balloonHeader %}
-                                        balloonContentHeader: "{{ place.balloonHeader|safe }}",
+                                        balloonContentHeader: '{{ place.balloonHeader|safe }}',
                                     {% endif %}
                                     {% if place.balloonBody %}
-                                        balloonContentBody: "{{ place.balloonBody|safe }}",
+                                        balloonContentBody: '{{ place.balloonBody|safe }}',
                                     {% endif %}
                                     {% if place.balloonFooter %}
-                                        balloonContentFooter: "{{ place.balloonFooter|safe }}",
+                                        balloonContentFooter: '{{ place.balloonFooter|safe }}',
                                     {% endif %}
                                 }, {
                                     {% if not claster.icon_style %}
@@ -317,7 +317,7 @@
                                         preset: "{{ claster.marker_preset }}",
                                     {% endif %}
                                 });
-                                claster.add(placemark);
+                                claster_{{ claster.id }}.add(placemark);
                                 {% if instance.auto_placement %}
                                     yaMap_{{ instance.id }}.setBounds(yaMap_{{ instance.id }}.geoObjects.getBounds(), {checkZoomRange:true, zoomMargin:50});
                                 {% endif %}
@@ -326,19 +326,19 @@
                             var placemark = new ymaps.Placemark([{{ place.place_lt|stringformat:"f" }},{{ place.place_lg|stringformat:"f" }}], {
                                     {% if place.icon_style == 'default' or claster.icon_style == 'default' %}
                                         iconContent: "{{ forloop.counter }}",
-                                    {% elif place.icon_captionlace or claster.icon_style == 'stretchy' or claster.icon_caption %}
+                                    {% elif place.icon_caption or claster.icon_caption %}
                                         iconContent: "{{ place.title }}",
                                     {% endif%}
                                     hintContent: {% if claster.hint %}"{{ claster.hint }}"{% else %}"{{ place.hint }}"{% endif %},
                                     balloonContent: {% if claster.balloon %}"{{ claster.balloon }}"{% else %}"{{ place.balloon }}"{% endif %},
                                     {% if place.balloonHeader %}
-                                        balloonContentHeader: "{{ place.balloonHeader|safe }}",
+                                        balloonContentHeader: '{{ place.balloonHeader|safe }}',
                                     {% endif %}
                                     {% if place.balloonBody %}
-                                        balloonContentBody: "{{ place.balloonBody|safe }}",
+                                        balloonContentBody: '{{ place.balloonBody|safe }}',
                                     {% endif %}
                                     {% if place.balloonFooter %}
-                                        balloonContentFooter: "{{ place.balloonFooter|safe }}",
+                                        balloonContentFooter: '{{ place.balloonFooter|safe }}',
                                     {% endif %}
                                 }, {
                                     {% if not claster.icon_style %}
@@ -377,7 +377,7 @@
                                         preset: "{{ claster.marker_preset }}",
                                     {% endif %}
                                 });
-                                claster.add(placemark);
+                                claster_{{ claster.id }}.add(placemark);
                                 {% if instance.auto_placement %}
                                     yaMap_{{ instance.id }}.setBounds(yaMap_{{ instance.id }}.geoObjects.getBounds(), {checkZoomRange:true, zoomMargin:50});
                                 {% endif %}
