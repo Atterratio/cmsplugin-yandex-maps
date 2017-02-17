@@ -1,0 +1,6 @@
+{
+    "package-name": "cmsplugin-yandex-maps",
+    "installed-apps": [
+        "cmsplugin_yandex_maps"
+    ]
+}

@@ -2,8 +2,18 @@ import re
 
 from django import forms
 from django.utils.translation import ugettext_lazy as _
+from django.forms.forms import NON_FIELD_ERRORS
+from django.db.models.fields import BLANK_CHOICE_DASH
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
 
-from .models import YandexMaps, Placemark
+from .models import YandexMaps, Placemark, Collection, Claster, Route
+
+
+
+class ColorInput(forms.TextInput):
+    input_type = 'color'
+
 
 
 class YandexMapsForm(forms.ModelForm):
@@ -27,26 +37,25 @@ class YandexMapsForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super(YandexMapsForm, self).clean()
-        route = cleaned_data['route']
-        print(self.data)
+        auto_placement = cleaned_data['auto_placement']
         data = self.data
         size_update_method = cleaned_data['size_update_method']
         jq_selector = cleaned_data['jq_selector']
         jq_event = cleaned_data['jq_event']
         
-        if route:
-            placemarks = 0
-            pattern = re.compile("YandexMaps_placemarks-\d+-id")
-            delete = re.compile("YandexMaps_placemarks-\d+-DELETE")
+        if auto_placement:
+            routes = 0
+            pattern = re.compile("yandexmaps_routes_set-\d+-id")
+            delete = re.compile("yandexmaps_routes_set-\d+-DELETE")
             for key in data:
                 if pattern.match(key):
-                    placemarks += 1
-                    
+                    routes += 1
+                
                 if delete.match(key):
-                    placemarks -= 1
+                    routes -= 1
                     
-            if placemarks < 2:
-                self.add_error('route', _('To create route need at least two placemarks'))
+            if routes > 1:
+                self.add_error('auto_placement', _("Don't work with two or more routes"))
 
         if size_update_method:
             if not jq_selector:
@@ -71,10 +80,10 @@ class PlacemarkForm(forms.ModelForm):
 
     icon_width = forms.IntegerField(label=_('Icon width'), initial=30, min_value=1)
     icon_height = forms.IntegerField(label=_('Icon height'), initial=30, min_value=1)
-    icon_offset_horizontal = forms.IntegerField(label=_('Icon offset horizontal'), initial=0, min_value=0)
-    icon_offset_vertical = forms.IntegerField(label=_('Icon offset vertical'), initial=0, min_value=0)
-    icon_content_offset_horizontal = forms.IntegerField(label=_('Icon content offset horizontal'), initial=0, min_value=0)
-    icon_content_offset_vertical = forms.IntegerField(label=_('Icon content offset vertical'), initial=0, min_value=0)
+    icon_offset_horizontal = forms.IntegerField(label=_('Icon offset horizontal'), initial=0)
+    icon_offset_vertical = forms.IntegerField(label=_('Icon offset vertical'), initial=0)
+    icon_content_offset_horizontal = forms.IntegerField(label=_('Icon content offset horizontal'), initial=0)
+    icon_content_offset_vertical = forms.IntegerField(label=_('Icon content offset vertical'), initial=0)
 
     balloonHeader = forms.CharField(label=_('Balloon header'), widget=forms.Textarea, required=False,
                                     help_text = _("Can use some html, please be careful!"))
@@ -84,10 +93,25 @@ class PlacemarkForm(forms.ModelForm):
                                     help_text = _("Can use some html, please be careful!"))
 
 
+    def clean_balloonHeader(self):
+        balloonHeader = self.cleaned_data['balloonHeader']
+        balloonHeader = balloonHeader.replace("'", '"').replace('\n', '<br>')
+        
+        return balloonHeader
+
+
     def clean_balloonBody(self):
         balloonBody = self.cleaned_data['balloonBody']
+        balloonBody = balloonBody.replace("'", '"').replace('\r\n', '<br>').replace('\t', '')
+        
+        return balloonBody
 
-        return balloonBody.replace('"', "'")
+
+    def clean_balloonFooter(self):
+        balloonFooter = self.cleaned_data['balloonFooter']
+        balloonFooter = balloonFooter.replace("'", '"').replace('\n', '<br>')
+        
+        return balloonFooter
 
 
     def clean(self):
@@ -109,12 +133,113 @@ class PlacemarkForm(forms.ModelForm):
 
         icon_style = cleaned_data['icon_style']
         icon_image = cleaned_data['icon_image']
+        icon_caption = cleaned_data['icon_caption']
         if icon_style == "image" and not icon_image:
-            self.add_error('icon_image', _('Image required'))
+            self.add_error('icon_image', forms.ValidationError(forms.fields.Field.default_error_messages['required']))
+        elif icon_style in ("", "default", "glif") and icon_caption:
+            self.add_error('icon_caption', _("Can't be checked with this style"))
+        elif icon_style == "stretchy" and not icon_caption:
+            self.add_error('icon_caption', _("Must be checked with this style"))
 
         return cleaned_data
 
 
     class Meta:
         model = Placemark
+        fields = '__all__'
+
+
+
+class CollectionForm(forms.ModelForm):
+    icon_width = forms.IntegerField(label=_('Icon width'), initial=30, min_value=1)
+    icon_height = forms.IntegerField(label=_('Icon height'), initial=30, min_value=1)
+    icon_offset_horizontal = forms.IntegerField(label=_('Icon offset horizontal'), initial=0)
+    icon_offset_vertical = forms.IntegerField(label=_('Icon offset vertical'), initial=0)
+    icon_content_offset_horizontal = forms.IntegerField(label=_('Icon content offset horizontal'), initial=0)
+    icon_content_offset_vertical = forms.IntegerField(label=_('Icon content offset vertical'), initial=0)
+
+
+    def clean(self):
+        cleaned_data = super(CollectionForm, self).clean()
+
+        icon_style = cleaned_data['icon_style']
+        icon_image = cleaned_data['icon_image']
+        icon_caption = cleaned_data['icon_caption']
+        if icon_style == "image" and not icon_image:
+            self.add_error('icon_image', forms.ValidationError(forms.fields.Field.default_error_messages['required']))
+        elif icon_style in ("", "default", "glif") and icon_caption:
+            self.add_error('icon_caption', _("Can't be checked with this style"))
+        elif icon_style == "stretchy" and not icon_caption:
+            self.add_error('icon_caption', _("Must be checked with this style"))
+
+        return cleaned_data
+
+
+    class Meta:
+        auto_created = True
+        model = Collection
+        fields = '__all__'
+
+
+
+class ClasterForm(forms.ModelForm):
+    icon_width = forms.IntegerField(label=_('Icon width'), initial=30, min_value=1)
+    icon_height = forms.IntegerField(label=_('Icon height'), initial=30, min_value=1)
+    icon_offset_horizontal = forms.IntegerField(label=_('Icon offset horizontal'), initial=0)
+    icon_offset_vertical = forms.IntegerField(label=_('Icon offset vertical'), initial=0)
+    icon_content_offset_horizontal = forms.IntegerField(label=_('Icon content offset horizontal'), initial=0)
+    icon_content_offset_vertical = forms.IntegerField(label=_('Icon content offset vertical'), initial=0)
+
+
+    def clean(self):
+        cleaned_data = super(ClasterForm, self).clean()
+
+        icon_style = cleaned_data['icon_style']
+        icon_image = cleaned_data['icon_image']
+        icon_caption = cleaned_data['icon_caption']
+        if icon_style == "image" and not icon_image:
+            self.add_error('icon_image', forms.ValidationError(forms.fields.Field.default_error_messages['required']))
+        elif icon_style in ("", "default", "glif") and icon_caption:
+            self.add_error('icon_caption', _("Can't be checked with this style"))
+        elif icon_style == "stretchy" and not icon_caption:
+            self.add_error('icon_caption', _("Must be checked with this style"))
+
+        return cleaned_data
+
+
+    class Meta:
+        model = Claster
+        fields = '__all__'
+
+
+
+class RouteForm(forms.ModelForm):
+    results = forms.IntegerField(label=_('Results'), initial=1, min_value=1)
+    
+    route_collor = forms.CharField(widget=ColorInput, label=_('Route collor'), initial="#9635ba")
+    additional_routes_collor = forms.CharField(widget=ColorInput, label=_('Additional routes collor'), initial="#7a684e")
+
+
+    def clean(self):
+        cleaned_data = super(RouteForm, self).clean()
+        data = self.data
+        
+        placemarks = 0
+        pattern = re.compile("route_placemarks_set-\d+-id")
+        delete = re.compile("route_placemarks_set-\d+-DELETE")
+        for key in data:
+            if pattern.match(key):
+                placemarks += 1
+            
+            if delete.match(key):
+                placemarks -= 1
+                
+        if placemarks < 2:
+            self.add_error(NON_FIELD_ERRORS, _("To create route need at least two Placemarks"))
+
+        return cleaned_data
+
+
+    class Meta:
+        model = Route
         fields = '__all__'
