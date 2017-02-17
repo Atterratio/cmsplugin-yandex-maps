@@ -1,10 +1,26 @@
-from codecs import open
-from os import path
-
 from setuptools import setup, find_packages
 from cmsplugin_yandex_maps import __version__
 
-here = path.abspath(path.dirname(__file__))
+REQUIREMENTS = [
+    'django-cms>=3.0.0',
+	'django>=1.7',
+]
+
+
+CLASSIFIERS = [
+    'Development Status :: 3 - Alpha',
+    'Environment :: Web Environment',
+    'Framework :: Django',
+    'License :: OSI Approved :: MIT License',
+    'Operating System :: OS Independent',
+    'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3.4',
+    'Programming Language :: Python :: 3.5',
+    'Topic :: Internet :: WWW/HTTP',
+    'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
+    'Topic :: Software Development :: Libraries :: Application Frameworks',
+    'Topic :: Software Development :: Libraries :: Python Modules',
+]
 
 setup(
     name='cmsplugin-yandex-maps',
@@ -14,15 +30,10 @@ setup(
     author='Aeternus Atterratio',
     author_email='atterratio@gmail.com',
     description='Rich functionality Yandex Maps plugin for Django-CMS',
-    long_description=open('README.md').read(),
-    classifiers=[
-        'Development Status :: 3 - Alpha',
-        'License :: OSI Approved :: MIT License',
-        'Programming Language :: Python :: 3',
-    ],
-
+    long_description=open('README.rst').read(),
+    install_requires=REQUIREMENTS,
+	classifiers=CLASSIFIERS,
     keywords='Django Django-CMS Yandex Map',
     packages=find_packages(),
     include_package_data=True,
-    install_requires=['Django>=1.7', 'django-cms>=3'],
 )

@@ -3,7 +3,7 @@ cmsplugin-yandex-maps
 Rich functionality Yandex Maps plugin for Django-CMS
 
 
-v0.2.1
+v0.3.0
 -------
 
 Rich functionality Yandex Maps plugin for Django-CMS
@@ -35,6 +35,12 @@ FEATURES
 
 Changelog
 -------
+####v0.3.0
+* improved clusterisation
+* improved routing
+* add collections
+
+
 ####v0.2.1
 * fix not copy markers on page save
 
