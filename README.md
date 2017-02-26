@@ -20,6 +20,8 @@ or
 
 Then, add `cmsplugin-yandex-map` to your `INSTALLED_APPS` and run `manage.py migrate`.
 
+Add `url(r'^yamaps/', include('cmsplugin_yandex_maps.urls', namespace="yamaps")),` to yours `urlpatterns`,
+or add `Apphook` to some page, for more simplest map and placemarks placement changing.
 
 FEATURES
 ===========

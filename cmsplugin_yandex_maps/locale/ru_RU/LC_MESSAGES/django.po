@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-17 00:14+0300\n"
-"PO-Revision-Date: 2017-02-17 00:16+0300\n"
+"POT-Creation-Date: 2017-02-27 00:35+0300\n"
+"PO-Revision-Date: 2017-02-27 00:36+0300\n"
 "Last-Translator: Aeternus Atterratio <atterratio@gmail.com>\n"
 "Language-Team: русский <atterratio@gmail.com>\n"
 "Language: \n"
@@ -47,6 +47,14 @@ msgstr "Значёк маркера"
 msgid "Django-CMS plugin YandexMaps"
 msgstr "Django-CMS плагин Яндекс.Карты"
 
+#: cmsplugin_yandex_maps/cms_apps.py:7 cmsplugin_yandex_maps/cms_plugins.py:39
+#: cmsplugin_yandex_maps/cms_plugins.py:40 cmsplugin_yandex_maps/models.py:143
+#: cmsplugin_yandex_maps/models.py:144 cmsplugin_yandex_maps/models.py:452
+#: cmsplugin_yandex_maps/models.py:484 cmsplugin_yandex_maps/models.py:524
+#: cmsplugin_yandex_maps/models.py:564
+msgid "Yandex Maps"
+msgstr "Яндекс.Карты"
+
 #: cmsplugin_yandex_maps/cms_plugins.py:18
 msgid "Yandex Maps Plugin"
 msgstr "Яндекс.Карты"
@@ -58,14 +66,6 @@ msgstr "Размер"
 #: cmsplugin_yandex_maps/cms_plugins.py:27
 msgid "Placement"
 msgstr "Размещение"
-
-#: cmsplugin_yandex_maps/cms_plugins.py:39
-#: cmsplugin_yandex_maps/cms_plugins.py:40 cmsplugin_yandex_maps/models.py:143
-#: cmsplugin_yandex_maps/models.py:144 cmsplugin_yandex_maps/models.py:452
-#: cmsplugin_yandex_maps/models.py:484 cmsplugin_yandex_maps/models.py:524
-#: cmsplugin_yandex_maps/models.py:564
-msgid "Yandex Maps"
-msgstr "Яндекс.Карты"
 
 #: cmsplugin_yandex_maps/forms.py:20 cmsplugin_yandex_maps/models.py:60
 msgid "Zoom"
@@ -787,6 +787,19 @@ msgstr[0] "Связь между Маршрутом и Меткoй"
 msgstr[1] "Связи между Маршрутами и Метками"
 msgstr[2] "Связи между Маршрутами и Метками"
 msgstr[3] "Связи между Маршрутами и Метками"
+
+#: cmsplugin_yandex_maps/templates/cmsplugin_yandex_maps/yandex_maps.djhtml:46
+#| msgid "Auto placement"
+msgid "Save placement"
+msgstr "Сохранить позицию"
+
+#: cmsplugin_yandex_maps/templates/cmsplugin_yandex_maps/yandex_maps.djhtml:48
+msgid "Save map zoom and coordinates of center"
+msgstr "Сохранить масштаб и центр карты"
+
+#: cmsplugin_yandex_maps/templates/cmsplugin_yandex_maps/yandex_maps.djhtml:71
+msgid "Do not enough permissions"
+msgstr "Недостаточно прав"
 
 #~ msgid "Image required"
 #~ msgstr "Изображение необходимо"
