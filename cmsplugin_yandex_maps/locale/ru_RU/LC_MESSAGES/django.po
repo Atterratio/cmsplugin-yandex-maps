@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-27 00:35+0300\n"
-"PO-Revision-Date: 2017-02-27 00:36+0300\n"
+"POT-Creation-Date: 2017-02-27 11:38+0300\n"
+"PO-Revision-Date: 2017-02-27 11:40+0300\n"
 "Last-Translator: Aeternus Atterratio <atterratio@gmail.com>\n"
 "Language-Team: русский <atterratio@gmail.com>\n"
 "Language: \n"
@@ -788,18 +788,35 @@ msgstr[1] "Связи между Маршрутами и Метками"
 msgstr[2] "Связи между Маршрутами и Метками"
 msgstr[3] "Связи между Маршрутами и Метками"
 
-#: cmsplugin_yandex_maps/templates/cmsplugin_yandex_maps/yandex_maps.djhtml:46
-#| msgid "Auto placement"
+#: cmsplugin_yandex_maps/templates/cmsplugin_yandex_maps/yandex_maps.djhtml:14
+msgid "Change placemark position?"
+msgstr "Изменить позицию маркера?"
+
+#: cmsplugin_yandex_maps/templates/cmsplugin_yandex_maps/yandex_maps.djhtml:24
+msgid "Placemark position change was success"
+msgstr "Позиция маркера успешно изменена"
+
+#: cmsplugin_yandex_maps/templates/cmsplugin_yandex_maps/yandex_maps.djhtml:29
+#: cmsplugin_yandex_maps/templates/cmsplugin_yandex_maps/yandex_maps.djhtml:102
+msgid "Do not enough permissions"
+msgstr "Недостаточно прав"
+
+#: cmsplugin_yandex_maps/templates/cmsplugin_yandex_maps/yandex_maps.djhtml:31
+#: cmsplugin_yandex_maps/templates/cmsplugin_yandex_maps/yandex_maps.djhtml:104
+msgid "An error occurred"
+msgstr "Произошла ошибка"
+
+#: cmsplugin_yandex_maps/templates/cmsplugin_yandex_maps/yandex_maps.djhtml:75
 msgid "Save placement"
 msgstr "Сохранить позицию"
 
-#: cmsplugin_yandex_maps/templates/cmsplugin_yandex_maps/yandex_maps.djhtml:48
+#: cmsplugin_yandex_maps/templates/cmsplugin_yandex_maps/yandex_maps.djhtml:77
 msgid "Save map zoom and coordinates of center"
 msgstr "Сохранить масштаб и центр карты"
 
-#: cmsplugin_yandex_maps/templates/cmsplugin_yandex_maps/yandex_maps.djhtml:71
-msgid "Do not enough permissions"
-msgstr "Недостаточно прав"
+#: cmsplugin_yandex_maps/templates/cmsplugin_yandex_maps/yandex_maps.djhtml:97
+msgid "Placement change was success"
+msgstr "Положение успешно изменено"
 
 #~ msgid "Image required"
 #~ msgstr "Изображение необходимо"
