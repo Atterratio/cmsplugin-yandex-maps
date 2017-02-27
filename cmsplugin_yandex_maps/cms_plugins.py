@@ -1,12 +1,12 @@
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 from django.contrib import admin
-from django.utils.translation import ungettext_lazy
 from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ungettext_lazy
 
+from .admin import PlacemarksInlineAdmin, CollectionsInlineAdmin, ClastersInlineAdmin, RoutesInlineAdmin
 from .forms import YandexMapsForm, PlacemarkForm
 from .models import YandexMaps
-from .admin import PlacemarksInlineAdmin, CollectionsInlineAdmin, ClastersInlineAdmin, RoutesInlineAdmin
 
 
 
@@ -56,11 +56,11 @@ class YandexMapsPlugin(CMSPluginBase):
         context.update({'controls': controls})
 
         context.update({'placemarks': instance.placemarks.all()})
-        
+
         context.update({'collections': instance.collections.all()})
-        
+
         context.update({'clasters': instance.clasters.all()})
-        
+
         routes = []
         for route in instance.routes.all():
             placemarks = route.placemarks.through.objects.filter(route=route).order_by('id')
@@ -73,7 +73,7 @@ class YandexMapsPlugin(CMSPluginBase):
                            'routing_mode': route.routing_mode, 'route_collor': route.route_collor,
                            'additional_routes_collor': route.additional_routes_collor,
                            'avoid_traffic_jams': route.avoid_traffic_jams},)
-        
+
         context.update({'routes': routes})
 
         return context

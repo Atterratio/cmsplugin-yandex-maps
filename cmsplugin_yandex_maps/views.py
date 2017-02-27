@@ -1,9 +1,10 @@
+import json
+
+from django.http import HttpResponseForbidden
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
-from django.http import HttpResponseForbidden
-import json
-from .models import YandexMaps, Placemark
 
+from .models import YandexMaps, Placemark
 
 
 @require_POST
@@ -19,7 +20,6 @@ def update_placement(request):
         return JsonResponse({'status': 'ok'})
     else:
         return HttpResponseForbidden()
-
 
 
 @require_POST

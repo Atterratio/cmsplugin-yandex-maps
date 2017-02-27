@@ -20,8 +20,9 @@ or
 
 Then, add `cmsplugin-yandex-map` to your `INSTALLED_APPS` and run `manage.py migrate`.
 
-Add `url(r'^yamaps/', include('cmsplugin_yandex_maps.urls', namespace="yamaps")),` to yours `urlpatterns`,
-or add `Apphook` to some page, for more simplest map and placemarks placement changing.
+Add "jQuery" to you page template if you have't do this already.
+
+Add `url(r'^yamaps/', include('cmsplugin_yandex_maps.urls', namespace="yamaps")),` to yours `urlpatterns`, or add `Apphook` to some page, for more simplest map and placemarks placement changing. Don't forgot about permissions!
 
 FEATURES
 ===========
@@ -30,13 +31,21 @@ FEATURES
 * several maps on page
 * multi markers
 * auto coordinates and auto placment
+* "drag & drop" coordinates receipt
 * size tweak
 * hack for hidden ellements like modal, accordion, carousel
-* routing(ugly)
+* routing
 
 
 Changelog
 -------
+####v0.4.0
+* remove jQuery from plagin template(see instalation)
+* change map placment from page edit mod
+* "drag & drop" placemarks from page edit mod
+* add standalone placemark by right click on map in page edit mod
+
+
 ####v0.3.0
 * improved clusterisation
 * improved routing

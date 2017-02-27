@@ -1,6 +1,7 @@
 import os.path
 
 from cms.models import CMSPlugin
+from cms.utils.conf import default
 from django.conf import settings
 from django.db import models
 from django.db.models.signals import pre_save, post_delete
@@ -9,14 +10,12 @@ from django.utils.text import slugify
 from django.utils.translation import pgettext_lazy, ungettext_lazy, ugettext
 from django.utils.translation import ugettext_lazy as _
 from unidecode import unidecode
-from cms.utils.conf import default
 
 
 COLORS = (('blue', _('Blue')), ('red', _('Red')), ('darkOrange', _('Dark orange')), ('night', _('Night')),
           ('darkBlue', _('DarkBlue')), ('pink', _('Pink')), ('gray', _('Gray')), ('brown', _('Brown')),
           ('darkGreen', _('Dark green')), ('violet', _('Violet')), ('black', _('Black')), ('yellow', _('Yellow')),
           ('green', _('Green')), ('orange', _('Orange')), ('lightBlue', _('Light blue')), ('olive', _('Olive')))
-
 
 ICON_GLIF = (('Home', _('Home')), ('Airport', _('Airport')), ('Bar', _('Bar')), ('Food', _('Food')),
                  ('Cinema', _('Cinema')), ('MassTransit', _('Mass Transit')), ('Toilet', _('Toilet')), ('Beach', _('Beach')),
@@ -32,7 +31,6 @@ ICON_GLIF = (('Home', _('Home')), ('Airport', _('Airport')), ('Bar', _('Bar')), 
                  ('Mountain', _('Mountain')), ('CarWash', _('Car Wash')), ('Factory', _('Factory')), ('Court', _('Court')),
                  ('Hotel', _('Hotel')), ('Christian', _('Christian')), ('Laundry', _('Laundry')), ('Souvenirs', _('Souvenirs')),
                  ('Dog', _('Dog')), ('Leisure', _('Leisure')))
-
 
 ICON_STYLE = (('default', _('Default')), ('stretchy', _('Stretchy')), ('doted', _('Doted')),
               ('glif', _('With glif')), ('image', _('Image')))
@@ -95,16 +93,16 @@ class YandexMaps(CMSPlugin):
                                       help_text = _("Sorry for the Russian, I'm too lazy and just copied the description from the documentation"))
 
     classes = models.TextField(verbose_name=_('CSS classes'), blank=True)
-    
+
     placemarks = models.ManyToManyField('Placemark', blank=True, through='YandexMaps_Placemarks',
                                         verbose_name=ungettext_lazy("Placemark", "Placemarks", 1))
-    
+
     collections = models.ManyToManyField('Collection', blank=True, through='YandexMaps_Collections',
                                         verbose_name=ungettext_lazy("Collection", "Collections", 1))
-    
+
     clasters = models.ManyToManyField('Claster', blank=True, through='YandexMaps_Clasters',
                                         verbose_name=ungettext_lazy("Claster", "Clasters", 1))
-    
+
     routes = models.ManyToManyField('Route', blank=True, through='YandexMaps_Routes',
                                         verbose_name=ungettext_lazy("Route", "Routes", 1))
 
@@ -116,8 +114,8 @@ class YandexMaps(CMSPlugin):
         self.collections = oldinstance.collections.all()
         self.clasters = oldinstance.clasters.all()
         self.routes = oldinstance.routes.all()
-    
-    
+
+
     def __str__(self):
         try:
             draft = self.page.publisher_is_draft
@@ -137,8 +135,8 @@ class YandexMaps(CMSPlugin):
                     return self.title
                 else:
                     return str(self.id)
-    
-    
+
+
     class Meta:
         verbose_name = _("Yandex Maps")
         verbose_name_plural = _("Yandex Maps")
@@ -160,7 +158,6 @@ class Control(models.Model):
 
     def __str__(self):
         return "%s | %s" % (self.control, self.description)
-
 
 
 def upload_path_handler(instance, filename):
@@ -422,7 +419,6 @@ class Placemark(models.Model):
         verbose_name_plural = ungettext_lazy("Placemark", "Placemarks", 2)
 
 
-
 @receiver(pre_save, sender=Placemark)
 @receiver(pre_save, sender=Collection)
 def delete_old_image(instance, **kwargs):
@@ -433,7 +429,6 @@ def delete_old_image(instance, **kwargs):
                 os.remove('%s/%s' % (settings.MEDIA_ROOT, old_instance.icon_image))
             except:
                 pass
-
 
 
 @receiver(post_delete, sender=Placemark)
@@ -452,8 +447,8 @@ class YandexMaps_Placemarks(models.Model):
                                    verbose_name=_("Yandex Maps"))
     placemark = models.ForeignKey(Placemark, on_delete=models.CASCADE,
                                    verbose_name=ungettext_lazy("Placemark", "Placemarks", 1))
-    
-    
+
+
     def __str__(self):
         return "%s — %s" % (self.yandexmaps, self.placemark)
 
@@ -466,7 +461,6 @@ class YandexMaps_Placemarks(models.Model):
                                              "Yandex Maps Plugins — Placemarks relationships", 2)
 
 
-
 def not_published_limit_choices():
     yaMapsDrafts = []
     try:
@@ -474,7 +468,7 @@ def not_published_limit_choices():
         yaMapsDrafts = [x.id for x in yaMaps if x.page.publisher_is_draft]
     except:
         pass
-    
+
     return yaMapsDrafts
 
 
@@ -484,8 +478,8 @@ class YandexMaps_Collections(models.Model):
                                    verbose_name=_("Yandex Maps"))
     collection = models.ForeignKey(Collection, on_delete=models.CASCADE,
                                    verbose_name=ungettext_lazy("Collection", "Collections", 1))
-    
-    
+
+
     def __str__(self):
         return "%s — %s" % (self.yandexmaps, self.collection)
 
@@ -504,12 +498,12 @@ class Collection_Placemarks(models.Model):
                                    verbose_name=ungettext_lazy("Collection", "Collections", 1))
     placemark = models.ForeignKey(Placemark, on_delete=models.CASCADE,
                                    verbose_name=ungettext_lazy("Placemark", "Placemarks", 1))
-     
-     
+
+
     def __str__(self):
         return "%s — %s" % (self.collection, self.placemark)
- 
- 
+
+
     class Meta:
         auto_created = True
         verbose_name = ungettext_lazy("Collection — Placemark relationship",
@@ -524,8 +518,8 @@ class YandexMaps_Clasters(models.Model):
                                    verbose_name=_("Yandex Maps"))
     claster = models.ForeignKey(Claster, on_delete=models.CASCADE,
                                    verbose_name=ungettext_lazy("Claster", "Clasters", 1))
-    
-    
+
+
     def __str__(self):
         return "%s — %s" % (self.yandexmaps, self.claster)
 
@@ -544,12 +538,12 @@ class Claster_Placemarks(models.Model):
                                    verbose_name=ungettext_lazy("Claster", "Clasters", 1))
     placemark = models.ForeignKey(Placemark, on_delete=models.CASCADE,
                                    verbose_name=ungettext_lazy("Placemark", "Placemarks", 1))
-     
-     
+
+
     def __str__(self):
         return "%s — %s" % (self.claster, self.placemark)
- 
- 
+
+
     class Meta:
         auto_created = True
         verbose_name = ungettext_lazy("Claster — Placemark relationship",
@@ -564,8 +558,8 @@ class YandexMaps_Routes(models.Model):
                                    verbose_name=_("Yandex Maps"))
     route = models.ForeignKey(Route, on_delete=models.CASCADE,
                                    verbose_name=ungettext_lazy("Route", "Routes", 1))
-    
-    
+
+
     def __str__(self):
         return "%s — %s" % (self.yandexmaps, self.route)
 
@@ -583,12 +577,12 @@ class Route_Placemarks(models.Model):
                                    verbose_name=ungettext_lazy("Route", "Routes", 1))
     placemark = models.ForeignKey(Placemark, on_delete=models.CASCADE,
                                    verbose_name=ungettext_lazy("Placemark", "Placemarks", 1))
-     
-     
+
+
     def __str__(self):
         return "%s — %s" % (self.route, self.placemark)
- 
- 
+
+
     class Meta:
         auto_created = True
         verbose_name = ungettext_lazy("Route — Placemark relationship",

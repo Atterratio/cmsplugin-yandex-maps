@@ -111,8 +111,9 @@
                 
                 {% if request.toolbar.edit_mode and perms.cms.change_page and perms.cmsplugin_yandex_maps.add_placemark %}
                     yaMap_{{ instance.id }}.events.add('contextmenu', function(e){
-                        window.dismissAddRelatedObjectPopup = function(w){
+                        window.dismissAddRelatedObjectPopup = function(){
                             admin_popup.close();
+                            location.reload();
                         }
                         coords = e.get('coords')
                         url = "/{{ LANGUAGE_CODE }}/admin/cmsplugin_yandex_maps/placemark/add/?_to_field=id&_popup=1&place_lt="+coords[0]+"&place_lg="+coords[1]+"&map="+{{ instance.id }}+"&auto_coordinates="

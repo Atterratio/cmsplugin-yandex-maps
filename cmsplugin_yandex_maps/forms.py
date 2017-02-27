@@ -1,11 +1,11 @@
 import re
 
 from django import forms
-from django.utils.translation import ugettext_lazy as _
-from django.forms.forms import NON_FIELD_ERRORS
 from django.db.models.fields import BLANK_CHOICE_DASH
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
+from django.forms.forms import NON_FIELD_ERRORS
+from django.utils.translation import ugettext_lazy as _
 
 from .models import YandexMaps, Placemark, Collection, Claster, Route
 
@@ -31,7 +31,7 @@ class YandexMapsForm(forms.ModelForm):
 
     def clean_jq_selector(self):
         jq_selector = self.cleaned_data['jq_selector']
-        
+
         return jq_selector.replace('"', "'").strip("'")
 
 
@@ -42,7 +42,7 @@ class YandexMapsForm(forms.ModelForm):
         size_update_method = cleaned_data['size_update_method']
         jq_selector = cleaned_data['jq_selector']
         jq_event = cleaned_data['jq_event']
-        
+
         if auto_placement:
             routes = 0
             pattern = re.compile("yandexmaps_routes_set-\d+-id")
@@ -50,10 +50,10 @@ class YandexMapsForm(forms.ModelForm):
             for key in data:
                 if pattern.match(key):
                     routes += 1
-                
+
                 if delete.match(key):
                     routes -= 1
-                    
+
             if routes > 1:
                 self.add_error('auto_placement', _("Don't work with two or more routes"))
 
@@ -110,7 +110,7 @@ class PlacemarkForm(forms.ModelForm):
     def clean_balloonFooter(self):
         balloonFooter = self.cleaned_data['balloonFooter']
         balloonFooter = balloonFooter.replace("'", '"').replace('\n', '<br>')
-        
+
         return balloonFooter
 
 
@@ -215,7 +215,7 @@ class ClasterForm(forms.ModelForm):
 
 class RouteForm(forms.ModelForm):
     results = forms.IntegerField(label=_('Results'), initial=1, min_value=1)
-    
+
     route_collor = forms.CharField(widget=ColorInput, label=_('Route collor'), initial="#9635ba")
     additional_routes_collor = forms.CharField(widget=ColorInput, label=_('Additional routes collor'), initial="#7a684e")
 
@@ -223,17 +223,17 @@ class RouteForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super(RouteForm, self).clean()
         data = self.data
-        
+
         placemarks = 0
         pattern = re.compile("route_placemarks_set-\d+-id")
         delete = re.compile("route_placemarks_set-\d+-DELETE")
         for key in data:
             if pattern.match(key):
                 placemarks += 1
-            
+
             if delete.match(key):
                 placemarks -= 1
-                
+
         if placemarks < 2:
             self.add_error(NON_FIELD_ERRORS, _("To create route need at least two Placemarks"))
 

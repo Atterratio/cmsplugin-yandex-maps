@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-27 11:38+0300\n"
+"POT-Creation-Date: 2017-02-27 15:17+0300\n"
 "PO-Revision-Date: 2017-02-27 11:40+0300\n"
 "Last-Translator: Aeternus Atterratio <atterratio@gmail.com>\n"
 "Language-Team: русский <atterratio@gmail.com>\n"
@@ -788,20 +788,20 @@ msgstr[1] "Связи между Маршрутами и Метками"
 msgstr[2] "Связи между Маршрутами и Метками"
 msgstr[3] "Связи между Маршрутами и Метками"
 
-#: cmsplugin_yandex_maps/templates/cmsplugin_yandex_maps/yandex_maps.djhtml:14
+#: cmsplugin_yandex_maps/templates/cmsplugin_yandex_maps/yandex_maps.djhtml:15
 msgid "Change placemark position?"
 msgstr "Изменить позицию маркера?"
 
-#: cmsplugin_yandex_maps/templates/cmsplugin_yandex_maps/yandex_maps.djhtml:24
+#: cmsplugin_yandex_maps/templates/cmsplugin_yandex_maps/yandex_maps.djhtml:25
 msgid "Placemark position change was success"
 msgstr "Позиция маркера успешно изменена"
 
-#: cmsplugin_yandex_maps/templates/cmsplugin_yandex_maps/yandex_maps.djhtml:29
+#: cmsplugin_yandex_maps/templates/cmsplugin_yandex_maps/yandex_maps.djhtml:30
 #: cmsplugin_yandex_maps/templates/cmsplugin_yandex_maps/yandex_maps.djhtml:102
 msgid "Do not enough permissions"
 msgstr "Недостаточно прав"
 
-#: cmsplugin_yandex_maps/templates/cmsplugin_yandex_maps/yandex_maps.djhtml:31
+#: cmsplugin_yandex_maps/templates/cmsplugin_yandex_maps/yandex_maps.djhtml:32
 #: cmsplugin_yandex_maps/templates/cmsplugin_yandex_maps/yandex_maps.djhtml:104
 msgid "An error occurred"
 msgstr "Произошла ошибка"
