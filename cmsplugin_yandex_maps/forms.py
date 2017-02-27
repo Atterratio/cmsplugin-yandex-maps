@@ -21,8 +21,8 @@ class YandexMapsForm(forms.ModelForm):
     min_zoom = forms.IntegerField(label=_('Minimum zoom'), initial=0, min_value=0, max_value=23)
     max_zoom = forms.IntegerField(label=_('Maximum zoom'), initial=23, min_value=0, max_value=23)
 
-    center_lt = forms.DecimalField(label=_('Latitude'), initial=55.76, min_value=-90, max_value=90, decimal_places=7)
-    center_lg = forms.DecimalField(label=_('Longitude'), initial=37.64, min_value=-180, max_value=180, decimal_places=7)
+    center_lt = forms.DecimalField(label=_('Latitude'), initial=55.76, min_value=-90, max_value=90, decimal_places=15)
+    center_lg = forms.DecimalField(label=_('Longitude'), initial=37.64, min_value=-180, max_value=180, decimal_places=15)
 
     width = forms.IntegerField(label=_('Width'), initial=320, min_value=1)
     height = forms.IntegerField(label=_('Height'), initial=180, min_value=1)
@@ -74,9 +74,9 @@ class YandexMapsForm(forms.ModelForm):
 
 class PlacemarkForm(forms.ModelForm):
     place_lt = forms.DecimalField(label=_('Latitude'), required=False, min_value=-90,
-                                  max_value=90, decimal_places=14)
+                                  max_value=90, decimal_places=15)
     place_lg = forms.DecimalField(label=_('Longitude'), required=False, min_value=-180,
-                                  max_value=180, decimal_places=14)
+                                  max_value=180, decimal_places=15)
 
     icon_width = forms.IntegerField(label=_('Icon width'), initial=30, min_value=1)
     icon_height = forms.IntegerField(label=_('Icon height'), initial=30, min_value=1)
