@@ -8,7 +8,7 @@ REQUIREMENTS = [
 
 
 CLASSIFIERS = [
-    'Development Status :: 3 - Alpha',
+    'Development Status :: 4 - Beta',
     'Environment :: Web Environment',
     'Framework :: Django',
     'License :: OSI Approved :: MIT License',
@@ -30,7 +30,7 @@ setup(
     author='Aeternus Atterratio',
     author_email='atterratio@gmail.com',
     description='Rich functionality Yandex Maps plugin for Django-CMS',
-    long_description=open('README.md').read(),
+    long_description=open('README.rst').read(),
     install_requires=REQUIREMENTS,
 	classifiers=CLASSIFIERS,
     keywords='Django Django-CMS Yandex Map',

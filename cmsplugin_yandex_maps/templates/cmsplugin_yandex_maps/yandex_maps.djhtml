@@ -73,16 +73,12 @@
                     var savePlacement_{{ instance.id }} = new ymaps.control.Button({
                         data: {
                             content: '{% trans "Save placement" %}',
-                            //image: '{% static "cmsplugin_yandex_maps/img/save.png" %}',
+                            image: '{% static "cmsplugin_yandex_maps/img/save.png" %}',
                             title: '{% trans "Save map zoom and coordinates of center" %}',
                         },
                         options: {
-                            maxWidth: [28, 150, 178],
+                            maxWidth: [30, 150, 200],
                             selectOnClick: false,
-                            position: {
-                                bottom: 30,
-                                right: 5,
-                            },
                         },
                     });
                     savePlacement_{{ instance.id }}.events.add('press', function(){
@@ -116,7 +112,7 @@
                             location.reload();
                         }
                         coords = e.get('coords')
-                        url = "/{{ LANGUAGE_CODE }}/admin/cmsplugin_yandex_maps/placemark/add/?_to_field=id&_popup=1&place_lt="+coords[0]+"&place_lg="+coords[1]+"&map="+{{ instance.id }}+"&auto_coordinates="
+                        url = "/admin/cmsplugin_yandex_maps/placemark/add/?_to_field=id&_popup=1&place_lt="+coords[0]+"&place_lg="+coords[1]+"&map="+{{ instance.id }}+"&auto_coordinates="
                         admin_popup = window.open(url, "admin_popup", 'height=500,width=800,resizable=yes,scrollbars=yes');
                     });
                 {% endif %}
