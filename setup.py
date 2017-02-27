@@ -30,7 +30,7 @@ setup(
     author='Aeternus Atterratio',
     author_email='atterratio@gmail.com',
     description='Rich functionality Yandex Maps plugin for Django-CMS',
-    long_description=open('README.rst').read(),
+    long_description=open('README.md').read(),
     install_requires=REQUIREMENTS,
 	classifiers=CLASSIFIERS,
     keywords='Django Django-CMS Yandex Map',
