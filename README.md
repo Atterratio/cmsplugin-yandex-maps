@@ -3,7 +3,7 @@ cmsplugin-yandex-maps
 Rich functionality Yandex Maps plugin for Django-CMS
 
 
-v0.3.0
+v0.4.0
 -------
 
 Rich functionality Yandex Maps plugin for Django-CMS
