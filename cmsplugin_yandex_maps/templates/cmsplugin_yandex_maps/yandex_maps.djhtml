@@ -1,4 +1,5 @@
 {% load sekizai_tags i18n static %}
+{% get_current_language as LANGUAGE_CODE %}
 
 <div class="cmsplugin-ya-maps {{ instance.classes }}">
     <div id="map-{{ instance.id }}" style="width: 100%; height: 100%;"></div>
@@ -106,6 +107,17 @@
                         });
                     });
                     yaMap_{{ instance.id }}.controls.add(savePlacement_{{ instance.id }});
+                {% endif %}
+                
+                {% if request.toolbar.edit_mode and perms.cms.change_page and perms.cmsplugin_yandex_maps.add_placemark %}
+                    yaMap_{{ instance.id }}.events.add('contextmenu', function(e){
+                        window.dismissAddRelatedObjectPopup = function(w){
+                            admin_popup.close();
+                        }
+                        coords = e.get('coords')
+                        url = "/{{ LANGUAGE_CODE }}/admin/cmsplugin_yandex_maps/placemark/add/?_to_field=id&_popup=1&place_lt="+coords[0]+"&place_lg="+coords[1]+"&map="+{{ instance.id }}+"&auto_coordinates="
+                        admin_popup = window.open(url, "admin_popup", 'height=500,width=800,resizable=yes,scrollbars=yes');
+                    });
                 {% endif %}
                 
                 {% for place in placemarks.all %}
