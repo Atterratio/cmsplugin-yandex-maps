@@ -8,6 +8,35 @@
     <script src="https://api-maps.yandex.ru/2.1/?lang={{ instance.lang }}" type="text/javascript"></script>
     <script src="{% static 'cmsplugin_yandex_maps/js/utils.js' %}" type="text/javascript"></script>
     <script>
+        {% url 'yamaps:update_placemark' as update_placemark %}
+        {% if update_placemark %}
+            function update_placemark(id, position){
+                changePlacemark = confirm('{% trans "Change placemark position?" %}');
+                if (changePlacemark == true){
+                    $.ajax({
+                        url: "{{ update_placemark }}",
+                        type: 'post',
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        data: JSON.stringify({id: id, position: position}),
+                        success: function(data){
+                            if (data['status']=='ok'){
+                                alert('{% trans "Placemark position change was success" %}');
+                            }
+                        },
+                        error: function(data){
+                            if (data.status == 403){
+                                alert('{% trans "Do not enough permissions" %}');
+                            } else {
+                                alert('{% trans "An error occurred" %}');
+                            }
+                        },
+                    });
+                }
+            }
+        {% endif %}
+
+
         window.coord = 1;
         function ya_map_container_size_{{ instance.id }}(){
             {% if instance.sizing == "auto" %}
@@ -39,48 +68,50 @@
                 {% endif %}
                 
                 {% url 'yamaps:update_placement' as update_placement %}
-                {% if update_placement %}
-                    {% if request.toolbar.edit_mode and perms.cms.change_page and perms.cmsplugin_yandex_maps.change_yandexmaps %}
-                        var savePlacement_{{ instance.id }} = new ymaps.control.Button({
-                            data: {
-                                content: '{% trans "Save placement" %}',
-                                //image: '{% static "cmsplugin_yandex_maps/img/save.png" %}',
-                                title: '{% trans "Save map zoom and coordinates of center" %}',
+                {% if update_placement and request.toolbar.edit_mode and perms.cms.change_page and perms.cmsplugin_yandex_maps.change_yandexmaps %}
+                    var savePlacement_{{ instance.id }} = new ymaps.control.Button({
+                        data: {
+                            content: '{% trans "Save placement" %}',
+                            //image: '{% static "cmsplugin_yandex_maps/img/save.png" %}',
+                            title: '{% trans "Save map zoom and coordinates of center" %}',
+                        },
+                        options: {
+                            maxWidth: [28, 150, 178],
+                            selectOnClick: false,
+                            position: {
+                                bottom: 30,
+                                right: 5,
                             },
-                            options: {
-                                maxWidth: [28, 150, 178],
-                                selectOnClick: false,
-                                position: {
-                                    bottom: 30,
-                                    right: 5,
-                                },
+                        },
+                    });
+                    savePlacement_{{ instance.id }}.events.add('press', function(){
+                        $.ajax({
+                            url: "{{ update_placement }}",
+                            type: 'post',
+                            contentType: 'application/json; charset=utf-8',
+                            dataType: 'json',
+                            data: JSON.stringify({id: {{ instance.id }}, center: yaMap_{{ instance.id }}.getCenter(), zoom: yaMap_{{ instance.id }}.getZoom()}),
+                            success: function(data){
+                                if (data['status']=='ok'){
+                                    alert('{% trans "Placement change was success" %}');
+                                }
+                            },
+                            error: function(data){
+                                if (data.status == 403){
+                                    alert('{% trans "Do not enough permissions" %}');
+                                } else {
+                                    alert('{% trans "An error occurred" %}');
+                                }
                             },
                         });
-                        savePlacement_{{ instance.id }}.events.add('press', function(){
-                            $.ajax({
-                                url: "{{ update_placement }}",
-                                type: 'post',
-                                contentType: 'application/json; charset=utf-8',
-                                dataType: 'json',
-                                data: JSON.stringify({id: {{ instance.id }}, center: yaMap_{{ instance.id }}.getCenter(), zoom: yaMap_{{ instance.id }}.getZoom()}),
-                                success: function(data){
-                                    console.debug(data);
-                                },
-                                error: function(data){
-                                    if (data.status == 403){
-                                        alert('{% trans "Do not enough permissions" %}');
-                                    }
-                                },
-                            });
-                        });
-                        yaMap_{{ instance.id }}.controls.add(savePlacement_{{ instance.id }});
-                    {% endif %}
+                    });
+                    yaMap_{{ instance.id }}.controls.add(savePlacement_{{ instance.id }});
                 {% endif %}
                 
                 {% for place in placemarks.all %}
                     {% if place.auto_coordinates %}
                         ymaps.geocode("{{ place.place }}").then(function(res){
-                            var placemark = new ymaps.Placemark(res.geoObjects.get(0).geometry, {
+                            var placemark_{{ place.id }} = new ymaps.Placemark(res.geoObjects.get(0).geometry, {
                                 {% if place.icon_style == 'default' %}
                                     iconContent: "{{ forloop.counter }}",
                                 {% elif place.icon_caption %}
@@ -115,14 +146,25 @@
                                 {% else %}
                                     preset: "{{ place.marker_preset }}",
                                 {% endif %}
+                                {% if update_placemark and request.toolbar.edit_mode and perms.cms.change_page and perms.cmsplugin_yandex_maps.change_placemark %}
+                                    draggable: true,
+                                {% endif %}
                             });
-                            yaMap_{{ instance.id }}.geoObjects.add(placemark);
+                            {% if update_placemark and request.toolbar.edit_mode and perms.cms.change_page and perms.cmsplugin_yandex_maps.change_placemark %}
+                                placemark_{{ place.id }}.events.add('dragend', function (e) {
+                                    id = parseInt({{ place.id }});
+                                    position = e.get('target').geometry.getCoordinates();
+                                    update_placemark(id, position);
+                                });
+                            {% endif %}
+                            yaMap_{{ instance.id }}.geoObjects.add(placemark_{{ place.id }});
                             {% if instance.auto_placement %}
                                 yaMap_{{ instance.id }}.setBounds(yaMap_{{ instance.id }}.geoObjects.getBounds(), {checkZoomRange:true, zoomMargin:50});
                             {% endif %}
                         });
+                        
                     {% else %}
-                        var placemark = new ymaps.Placemark([{{ place.place_lt|stringformat:"f" }},{{ place.place_lg|stringformat:"f" }}], {
+                        var placemark_{{ place.id }} = new ymaps.Placemark([{{ place.place_lt|stringformat:"f" }},{{ place.place_lg|stringformat:"f" }}], {
                             {% if place.icon_style == 'default' %}
                                 iconContent: "{{ forloop.counter }}",
                             {% elif place.icon_caption %}
@@ -157,8 +199,18 @@
                             {% else %}
                                 preset: "{{ place.marker_preset }}",
                             {% endif %}
+                            {% if update_placemark and request.toolbar.edit_mode and perms.cms.change_page and perms.cmsplugin_yandex_maps.change_placemark %}
+                                draggable: true,
+                            {% endif %}
                         });
-                        yaMap_{{ instance.id }}.geoObjects.add(placemark);
+                        {% if update_placemark and request.toolbar.edit_mode and perms.cms.change_page and perms.cmsplugin_yandex_maps.change_placemark %}
+                            placemark_{{ place.id }}.events.add('dragend', function (e) {
+                                id = parseInt({{ place.id }});
+                                position = e.get('target').geometry.getCoordinates();
+                                update_placemark(id, position);
+                            });
+                        {% endif %}
+                        yaMap_{{ instance.id }}.geoObjects.add(placemark_{{ place.id }});
                         {% if instance.auto_placement %}
                             yaMap_{{ instance.id }}.setBounds(yaMap_{{ instance.id }}.geoObjects.getBounds(), {checkZoomRange:true, zoomMargin:50});
                         {% endif %}
@@ -170,7 +222,7 @@
                     {% for place in collection.placemarks.all %}
                         {% if place.auto_coordinates %}
                             ymaps.geocode("{{ place.place }}").then(function(res){
-                                var placemark = new ymaps.Placemark(res.geoObjects.get(0).geometry, {
+                                var placemark_collection{{ collection.id }}_{{ place.id }} = new ymaps.Placemark(res.geoObjects.get(0).geometry, {
                                     {% if place.icon_style == 'default' or collection.icon_style == 'default' %}
                                         iconContent: "{{ forloop.counter }}",
                                     {% elif place.icon_caption or collection.icon_caption %}
@@ -223,14 +275,24 @@
                                     {% else %}
                                         preset: "{{ collection.marker_preset }}",
                                     {% endif %}
+                                    {% if update_placemark and request.toolbar.edit_mode and perms.cms.change_page and perms.cmsplugin_yandex_maps.change_placemark %}
+                                        draggable: true,
+                                    {% endif %}
                                 });
-                                collection.add(placemark);
+                                {% if update_placemark and request.toolbar.edit_mode and perms.cms.change_page and perms.cmsplugin_yandex_maps.change_placemark %}
+                                    placemark_collection{{ collection.id }}_{{ place.id }}.events.add('dragend', function (e) {
+                                        id = parseInt({{ place.id }});
+                                        position = e.get('target').geometry.getCoordinates();
+                                        update_placemark(id, position);
+                                    });
+                                {% endif %}
+                                collection.add(placemark_collection{{ collection.id }}_{{ place.id }});
                                 {% if instance.auto_placement %}
                                     yaMap_{{ instance.id }}.setBounds(yaMap_{{ instance.id }}.geoObjects.getBounds(), {checkZoomRange:true, zoomMargin:50});
                                 {% endif %}
                             });
                         {% else %}
-                            var placemark = new ymaps.Placemark([{{ place.place_lt|stringformat:"f" }},{{ place.place_lg|stringformat:"f" }}], {
+                            var placemark_collection{{ collection.id }}_{{ place.id }} = new ymaps.Placemark([{{ place.place_lt|stringformat:"f" }},{{ place.place_lg|stringformat:"f" }}], {
                                     {% if place.icon_style == 'default' or collection.icon_style == 'default' %}
                                         iconContent: "{{ forloop.counter }}",
                                     {% elif place.icon_caption or collection.icon_caption %}
@@ -283,8 +345,18 @@
                                     {% else %}
                                         preset: "{{ collection.marker_preset }}",
                                     {% endif %}
+                                    {% if update_placemark and request.toolbar.edit_mode and perms.cms.change_page and perms.cmsplugin_yandex_maps.change_placemark %}
+                                        draggable: true,
+                                    {% endif %}
                                 });
-                                collection.add(placemark);
+                                {% if update_placemark and request.toolbar.edit_mode and perms.cms.change_page and perms.cmsplugin_yandex_maps.change_placemark %}
+                                    placemark_collection{{ collection.id }}_{{ place.id }}.events.add('dragend', function (e) {
+                                        id = parseInt({{ place.id }});
+                                        position = e.get('target').geometry.getCoordinates();
+                                        update_placemark(id, position);
+                                    });
+                                {% endif %}
+                                collection.add(placemark_collection{{ collection.id }}_{{ place.id }});
                                 {% if instance.auto_placement %}
                                     yaMap_{{ instance.id }}.setBounds(yaMap_{{ instance.id }}.geoObjects.getBounds(), {checkZoomRange:true, zoomMargin:50});
                                 {% endif %}
@@ -301,7 +373,7 @@
                     {% for place in claster.placemarks.all %}
                         {% if place.auto_coordinates %}
                             ymaps.geocode("{{ place.place }}").then(function(res){
-                                var placemark = new ymaps.Placemark(res.geoObjects.get(0).geometry, {
+                                var placemark_claster{{ claster.id }}_{{ place.id }} = new ymaps.Placemark(res.geoObjects.get(0).geometry, {
                                     {% if place.icon_style == 'default' or claster.icon_style == 'default' %}
                                         iconContent: "{{ forloop.counter }}",
                                     {% elif place.icon_caption or claster.icon_caption %}
@@ -354,14 +426,24 @@
                                     {% else %}
                                         preset: "{{ claster.marker_preset }}",
                                     {% endif %}
+                                    {% if update_placemark and request.toolbar.edit_mode and perms.cms.change_page and perms.cmsplugin_yandex_maps.change_placemark %}
+                                        draggable: true,
+                                    {% endif %}
                                 });
-                                claster_{{ claster.id }}.add(placemark);
+                                {% if update_placemark and request.toolbar.edit_mode and perms.cms.change_page and perms.cmsplugin_yandex_maps.change_placemark %}
+                                    placemark_claster{{ claster.id }}_{{ place.id }}.events.add('dragend', function (e) {
+                                        id = parseInt({{ place.id }});
+                                        position = e.get('target').geometry.getCoordinates();
+                                        update_placemark(id, position);
+                                    });
+                                {% endif %}
+                                claster_{{ claster.id }}.add(placemark_claster{{ claster.id }}_{{ place.id }});
                                 {% if instance.auto_placement %}
                                     yaMap_{{ instance.id }}.setBounds(yaMap_{{ instance.id }}.geoObjects.getBounds(), {checkZoomRange:true, zoomMargin:50});
                                 {% endif %}
                             });
                         {% else %}
-                            var placemark = new ymaps.Placemark([{{ place.place_lt|stringformat:"f" }},{{ place.place_lg|stringformat:"f" }}], {
+                            var placemark_claster{{ claster.id }}_{{ place.id }} = new ymaps.Placemark([{{ place.place_lt|stringformat:"f" }},{{ place.place_lg|stringformat:"f" }}], {
                                     {% if place.icon_style == 'default' or claster.icon_style == 'default' %}
                                         iconContent: "{{ forloop.counter }}",
                                     {% elif place.icon_caption or claster.icon_caption %}
@@ -414,8 +496,18 @@
                                     {% else %}
                                         preset: "{{ claster.marker_preset }}",
                                     {% endif %}
+                                    {% if update_placemark and request.toolbar.edit_mode and perms.cms.change_page and perms.cmsplugin_yandex_maps.change_placemark %}
+                                        draggable: true,
+                                    {% endif %}
                                 });
-                                claster_{{ claster.id }}.add(placemark);
+                                {% if update_placemark and request.toolbar.edit_mode and perms.cms.change_page and perms.cmsplugin_yandex_maps.change_placemark %}
+                                    placemark_claster{{ claster.id }}_{{ place.id }}.events.add('dragend', function (e) {
+                                        id = parseInt({{ place.id }});
+                                        position = e.get('target').geometry.getCoordinates();
+                                        update_placemark(id, position);
+                                    });
+                                {% endif %}
+                                claster_{{ claster.id }}.add(placemark_claster{{ claster.id }}_{{ place.id }});
                                 {% if instance.auto_placement %}
                                     yaMap_{{ instance.id }}.setBounds(yaMap_{{ instance.id }}.geoObjects.getBounds(), {checkZoomRange:true, zoomMargin:50});
                                 {% endif %}
