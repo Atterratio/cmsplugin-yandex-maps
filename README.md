@@ -40,7 +40,7 @@ FEATURES
 Changelog
 -------
 ####v0.4.0
-* remove jQuery from plagin template(see instalation)
+* remove jQuery from plugin template(see instalation)
 * change map placment from page edit mod
 * "drag & drop" placemarks from page edit mod
 * add standalone placemark by right click on map in page edit mod
