@@ -17,12 +17,12 @@ v0.4.2
 INSTALLATION
 ============
 
-* `pip install cmsplugin-yandex-map` or `pip install git+https://github.com/Atterratio/cmsplugin-yandex-maps.git`;
-* add `cmsplugin-yandex-map` to your `INSTALLED_APPS`;
-* run `manage.py migrate`;
-* run `manage.py collectstatic`;
-* add `jQuery` to you page template if you haven't do this already;
-- (optional) for "drag & drop" map and marker add `url(r'^yamaps/', include('cmsplugin_yandex_maps.urls', namespace="yamaps")),` to yours `urlpatterns` in `urls.py`, or add app `Yandex Maps` to one of you pages.
+* run :code:`pip install cmsplugin-yandex-map` or :code:`pip install git+https://github.com/Atterratio/cmsplugin-yandex-maps.git`;
+* add :code:`cmsplugin-yandex-map` to your :code:`INSTALLED_APPS`;
+* run :code:`manage.py migrate`;
+* run :code:`manage.py collectstatic`;
+* add *jQuery* to you page template if you haven't do this already;
+- (optional) for "drag & drop" map and marker add :code:`url(r'^yamaps/', include('cmsplugin_yandex_maps.urls', namespace="yamaps")),` to yours :code:`urlpatterns` in :code:`urls.py`, or add app *Yandex Maps* to one of you pages.
 
 
 FEATURES
