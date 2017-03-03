@@ -2,8 +2,9 @@ from setuptools import setup, find_packages
 from cmsplugin_yandex_maps import __version__
 
 REQUIREMENTS = [
-    'django-cms>=3.0.0',
-	'django>=1.7',
+    'unidecode',
+    'django-cms>=3.3.0',
+    'django>=1.8.0',
 ]
 
 
@@ -14,8 +15,10 @@ CLASSIFIERS = [
     'License :: OSI Approved :: MIT License',
     'Operating System :: OS Independent',
     'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3.3',
     'Programming Language :: Python :: 3.4',
     'Programming Language :: Python :: 3.5',
+    'Programming Language :: Python :: 3.6',
     'Topic :: Internet :: WWW/HTTP',
     'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
     'Topic :: Software Development :: Libraries :: Application Frameworks',

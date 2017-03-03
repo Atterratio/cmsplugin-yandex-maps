@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-from . import views
+from cmsplugin_yandex_maps import views
 
 
 app_name = 'yamaps'

@@ -1,5 +1,4 @@
 {% load sekizai_tags i18n static %}
-{% get_current_language as LANGUAGE_CODE %}
 
 <div class="cmsplugin-ya-maps {{ instance.classes }}">
     <div id="map-{{ instance.id }}" style="width: 100%; height: 100%;"></div>

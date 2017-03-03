@@ -32,7 +32,7 @@ class YandexMapsForm(forms.ModelForm):
     def clean_jq_selector(self):
         jq_selector = self.cleaned_data['jq_selector']
 
-        return jq_selector.replace('"', "'").strip("'")
+        return jq_selector.replace('"', "'").strip("' ")
 
 
     def clean(self):

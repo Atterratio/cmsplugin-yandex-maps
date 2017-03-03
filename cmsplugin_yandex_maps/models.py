@@ -178,7 +178,7 @@ class Collection(models.Model):
     icon_style = models.CharField(_('Marker icon style'), max_length=8, choices=ICON_STYLE,
                                   blank=True, null=True)
     icon_color = models.CharField(_('Marker icon color'), max_length=15, choices=COLORS,
-                                  default='red')
+                                  blank=True, null=True)
     icon_circle = models.BooleanField(_('Circle icon'), default=False)
     icon_caption = models.BooleanField(_('Caption'), default=False)
     
@@ -243,7 +243,7 @@ class Claster(models.Model):
     icon_style = models.CharField(_('Marker icon style'), max_length=8, choices=ICON_STYLE,
                                   blank=True, null=True)
     icon_color = models.CharField(_('Marker icon color'), max_length=15, choices=COLORS,
-                                  default='red')
+                                  blank=True, null=True)
     icon_circle = models.BooleanField(_('Circle icon'), default=False)
     icon_caption = models.BooleanField(_('Caption'), default=False)
     icon_glif = models.CharField(_('Icon glif'), max_length=30, choices=ICON_GLIF, default='Home')
@@ -361,9 +361,9 @@ class Placemark(models.Model):
                                     upload_to=upload_path_handler)
     icon_width = models.IntegerField(_('Icon width'), default=30)
     icon_height = models.IntegerField(_('Icon height'), default=30)
-    icon_offset_horizontal= models.IntegerField(_('Icon offset horizontal'), default=0)
+    icon_offset_horizontal = models.IntegerField(_('Icon offset horizontal'), default=0)
     icon_offset_vertical = models.IntegerField(_('Icon offset vertical'), default=0)
-    icon_content_offset_horizontal= models.IntegerField(_('Icon content offset horizontal'), default=0)
+    icon_content_offset_horizontal = models.IntegerField(_('Icon content offset horizontal'), default=0)
     icon_content_offset_vertical = models.IntegerField(_('Icon content offset vertical'), default=0)
 
     hint = models.CharField(_("Placemark hint"), max_length=140, blank=True, null=True)

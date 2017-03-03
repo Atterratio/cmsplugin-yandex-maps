@@ -1,0 +1,27 @@
+language: python
+python:
+  - "3.3"
+  - "3.6"
+  - "nightly"
+env:
+  - "DJANGO_VERSION=1.8.* CMS_VERSION=3.3.*"
+  - "DJANGO_VERSION=1.9.* CMS_VERSION=3.3.*"
+  - "DJANGO_VERSION=1.8.* CMS_VERSION=3.4.*"
+  - "DJANGO_VERSION=1.9.* CMS_VERSION=3.4.*"
+  - "DJANGO_VERSION=1.10.* CMS_VERSION=3.4.*"
+matrix:
+  exclude:
+  - python: "3.3"
+    env: "DJANGO_VERSION=1.9.* CMS_VERSION=3.3.*"
+  - python: "3.3"
+    env: "DJANGO_VERSION=1.9.* CMS_VERSION=3.4.*"
+  - python: "3.3"
+    env: "DJANGO_VERSION=1.10.* CMS_VERSION=3.4.*"
+install:
+  - "pip3 install unidecode django==$DJANGO_VERSION django-cms==$CMS_VERSION"
+  - "pip3 install coverage"
+  - "pip3 install codecov"
+  - "pip install django_coverage_plugin"
+script:
+  - "coverage run ./cmsplugin_yandex_maps/tests/runtests.py"
+after_success: codecov

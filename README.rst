@@ -1,3 +1,8 @@
+.. image:: https://travis-ci.org/Atterratio/cmsplugin-yandex-maps.svg?branch=master
+    :target: https://travis-ci.org/Atterratio/cmsplugin-yandex-maps
+.. image:: https://codecov.io/gh/Atterratio/cmsplugin-yandex-maps/coverage.svg?branch=master
+    :target: https://codecov.io/gh/Atterratio/cmsplugin-yandex-maps
+
 =====================
 cmsplugin-yandex-maps
 =====================
@@ -7,12 +12,19 @@ Rich functionality Yandex Maps plugin for Django-CMS
 .. image:: https://img.shields.io/badge/Donate-PayPal-blue.svg
    :target: https://www.paypal.me/Atterratio
 .. image:: https://img.shields.io/badge/Donate-YaMoney-orange.svg
-   :target: http://yasobe.ru/na/atterratio
+   :target: https://money.yandex.ru/to/410011005689134
 
 
 ------
 v0.4.2
 ------
+
+REQUIREMENTS
+============
+
+* *Python >= 3.3*
+* *Django >= 1.8*
+* *Django-CMS >=3.3*
 
 INSTALLATION
 ============
@@ -22,7 +34,7 @@ INSTALLATION
 * run :code:`manage.py migrate`;
 * run :code:`manage.py collectstatic`;
 * add *jQuery* to you page template if you haven't do this already;
-- (optional) for "drag & drop" map and marker add :code:`url(r'^yamaps/', include('cmsplugin_yandex_maps.urls', namespace="yamaps")),` to yours :code:`urlpatterns` in :code:`urls.py`, or add app *Yandex Maps* to one of you pages.
+* (optional) for "drag & drop" map and marker add :code:`import cmsplugin_yandex_maps.urls ` and :code:`url(r'^yamaps/', include(cmsplugin_yandex_maps.urls, namespace="yamaps")),` to yours :code:`urlpatterns` in :code:`urls.py`, or add app *Yandex Maps* to one of you pages.
 
 
 FEATURES
@@ -37,54 +49,3 @@ FEATURES
 * size tweak
 * hack for hidden ellements like modal, accordion, carousel
 * routing
-
-
-CHANGELOG
-=========
-
-v0.4.2:
--------
-
-* fix save placement button icon
-* fix README
-
-v0.4.1:
--------
-
-* return README.rst for divio support
-* remove LANGUAGE_CODE from template(unnecessary can do bugs)
-
-v0.4.0:
--------
-
-* remove jQuery from plugin template(see instalation)
-* change map placment from page edit mod
-* "drag & drop" placemarks from page edit mod
-* add standalone placemark by right click on map in page edit mod
-
-
-v0.3.0:
--------
-
-* improved clusterisation
-* improved routing
-* add collections
-
-
-v0.2.1:
--------
-
-* fix not copy markers on page save
-
-
-v0.2.0:
--------
-
-* now can add one marker to many maps
-
-
-v0.1.1:
--------
-
-* fix crash on set place latitude and longitude
-* fix not blank Behaviors and Controls
