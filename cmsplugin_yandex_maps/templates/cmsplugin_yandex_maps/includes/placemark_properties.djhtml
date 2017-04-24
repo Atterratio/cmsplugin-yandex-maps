@@ -1,0 +1,93 @@
+{
+    {% if collection.icon_style == 'default' or claster.icon_style == 'default' %}
+        iconContent: "{{ forloop.counter }}",
+    {% elif claster.icon_caption or collection.icon_caption %}
+        iconContent: "{{ place.title }}",
+    {% else %}
+        {% if place.icon_style == 'default' %}
+            iconContent: "{{ forloop.counter }}",
+        {% elif place.icon_caption %}
+            iconContent: "{{ place.title }}",
+            iconCaption: "{{ place.title }}",
+        {% endif %}
+    {% endif%}
+    
+    {% if collection.hint %}
+        hintContent: "{{ collection.hint }}",
+    {% elif claster.hint %}
+        hintContent: "{{ claster.hint }}",
+    {% elif place.hint %}
+        hintContent: "{{ place.hint }}",
+    {% endif %}
+    
+    {% if collection.balloon %}
+        balloonContent: "{{ collection.balloon }}",
+    {% elif claster.balloon %}
+        balloonContent: "{{ claster.balloon }}",
+    {% elif place.balloon %}
+        balloonContent: "{{ place.balloon }}",
+    {% endif %}
+    
+    {% if place.balloonHeader %}
+        balloonContentHeader: '{{ place.balloonHeader|safe }}',
+    {% endif %}
+    
+    {% if place.balloonBody %}
+        balloonContentBody: '{{ place.balloonBody|safe }}',
+    {% endif %}
+    
+    {% if place.balloonFooter %}
+        balloonContentFooter: '{{ place.balloonFooter|safe }}',
+    {% endif %}
+}, {
+    {% if not claster.icon_style and not collection.icon_style %}
+        {% if place.icon_style == "image" and place.icon_image %}
+            {% if place.icon_caption %}
+                iconLayout: 'default#imageWithContent',
+            {% else %}
+                iconLayout: 'default#image',
+            {% endif%}
+            iconImageHref: "{{ place.icon_image.url }}",
+            {% if place.icon_caption %}
+                iconContentOffset: [{{ place.icon_content_offset_horizontal }}, {{ place.icon_content_offset_vertical }}],
+            {% endif %}
+            iconImageSize: [{{ place.icon_width }}, {{ place.icon_height }}],
+            iconImageOffset: [{{ place.icon_offset_horizontal }}, {{ place.icon_offset_vertical }}],
+        {% else %}
+            preset: "{{ place.marker_preset }}",
+        {% endif %}
+    {% elif collection.icon_style == "image" and collection.icon_image %}
+        {% if collection.icon_caption %}
+            iconLayout: 'default#imageWithContent',
+        {% else %}
+            iconLayout: 'default#image',
+        {% endif%}
+        iconImageHref: "{{ collection.icon_image.url }}",
+        {% if collection.icon_caption %}
+            iconContentOffset: [{{ collection.icon_content_offset_horizontal }}, {{ collection.icon_content_offset_vertical }}],
+        {% endif %}
+        iconImageSize: [{{ collection.icon_width }}, {{ collection.icon_height }}],
+        iconImageOffset: [{{ collection.icon_offset_horizontal }}, {{ collection.icon_offset_vertical }}],
+    {% elif claster.icon_style == "image" and claster.icon_image %}
+        {% if claster.icon_caption %}
+            iconLayout: 'default#imageWithContent',
+        {% else %}
+            iconLayout: 'default#image',
+        {% endif%}
+        iconImageHref: "{{ claster.icon_image.url }}",
+        {% if claster.icon_caption %}
+            iconContentOffset: [{{ claster.icon_content_offset_horizontal }}, {{ claster.icon_content_offset_vertical }}],
+        {% endif %}
+        iconImageSize: [{{ claster.icon_width }}, {{ claster.icon_height }}],
+        iconImageOffset: [{{ claster.icon_offset_horizontal }}, {{ claster.icon_offset_vertical }}],
+    {% else %}
+        {% if collection.marker_preset %}
+            preset: "{{ collection.marker_preset }}",
+        {% elif claster.marker_preset %}
+            preset: "{{ claster.marker_preset }}",
+        {% endif %}
+    {% endif %}
+    {% if update_placemark and request.toolbar.edit_mode and perms.cms.change_page and perms.cmsplugin_yandex_maps.change_placemark %}
+        draggable: true,
+    {% endif %}
+}
