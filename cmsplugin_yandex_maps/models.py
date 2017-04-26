@@ -212,9 +212,9 @@ class Collection(models.Model):
             elif self.icon_circle:
                 return "islands#%(color)sCircleDotIcon" % {'color': self.icon_color}
             elif self.icon_caption:
-                return "islands#%(color)sDotIcon" % {'color': self.icon_color}
-            else:
                 return "islands#%(color)sDotIconWithCaption" % {'color': self.icon_color}
+            else:
+                return "islands#%(color)sDotIcon" % {'color': self.icon_color}
         elif self.icon_style == 'glif':
             if self.icon_circle:
                 return "islands#%(color)s%(glif)sCircleIcon" % {'color': self.icon_color, 'glif': self.icon_glif}
@@ -283,9 +283,9 @@ class Claster(models.Model):
             elif self.icon_circle:
                 return "islands#%(color)sCircleDotIcon" % {'color': self.icon_color}
             elif self.icon_caption:
-                return "islands#%(color)sDotIcon" % {'color': self.icon_color}
-            else:
                 return "islands#%(color)sDotIconWithCaption" % {'color': self.icon_color}
+            else:
+                return "islands#%(color)sDotIcon" % {'color': self.icon_color}
         elif self.icon_style == 'glif':
             if self.icon_circle:
                 return "islands#%(color)s%(glif)sCircleIcon" % {'color': self.icon_color, 'glif': self.icon_glif}
@@ -459,17 +459,6 @@ class YandexMaps_Placemarks(models.Model):
                                       "Yandex Maps Plugins — Placemarks relationships", 1)
         verbose_name_plural = ungettext_lazy("Yandex Maps Plugin — Placemark relationship",
                                              "Yandex Maps Plugins — Placemarks relationships", 2)
-
-
-def not_published_limit_choices():
-    yaMapsDrafts = []
-    try:
-        yaMaps = YandexMaps.objects.all()
-        yaMapsDrafts = [x.id for x in yaMaps if x.page.publisher_is_draft]
-    except:
-        pass
-
-    return yaMapsDrafts
 
 
 

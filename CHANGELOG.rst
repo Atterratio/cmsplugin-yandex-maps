@@ -2,6 +2,10 @@
 CHANGELOG
 =========
 
+v0.4.3:
+-------
+*fix icon caption
+
 v0.4.2:
 -------
 

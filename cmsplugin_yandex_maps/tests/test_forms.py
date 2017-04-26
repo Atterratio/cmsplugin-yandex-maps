@@ -53,6 +53,10 @@ class YandexMapsFormTestCase(TestCase):
         cleaned_data = form.clean_jq_selector()
         self.assertEqual(cleaned_data, "strip 'mix' in selector")
 
+    def test_clean(self):
+        #TODO add some tests
+        pass
+
 
 class PlacemarkFormTestCase(TestCase):
     def setUp(self):
@@ -69,6 +73,73 @@ class PlacemarkFormTestCase(TestCase):
     def test_form_is_valid(self):
         form = PlacemarkForm(data=self.form_data)
         self.assertTrue(form.is_valid())
+    
+    def test_clean_balloonHeader(self):
+        form_data = self.form_data
+        
+        form_data.update({'balloonHeader': '''replace ' ' to ""'''})
+        form = PlacemarkForm(data=form_data)
+        form.is_valid()
+        cleaned_data = form.clean_balloonHeader()
+        self.assertEqual(cleaned_data, '''replace " " to ""''')
+        
+        form_data.update({'balloonHeader': '''replace \r\n to <br>'''})
+        form = PlacemarkForm(data=form_data)
+        form.is_valid()
+        cleaned_data = form.clean_balloonHeader()
+        self.assertEqual(cleaned_data, '''replace <br> to <br>''')
+        
+        form_data.update({'balloonHeader': ' remove \t'})
+        form = PlacemarkForm(data=form_data)
+        form.is_valid()
+        cleaned_data = form.clean_balloonHeader()
+        self.assertEqual(cleaned_data, 'remove')
+    
+    def test_clean_balloonBody(self):
+        form_data = self.form_data
+        
+        form_data.update({'balloonBody': '''replace ' ' to ""'''})
+        form = PlacemarkForm(data=form_data)
+        form.is_valid()
+        cleaned_data = form.clean_balloonBody()
+        self.assertEqual(cleaned_data, '''replace " " to ""''')
+        
+        form_data.update({'balloonBody': '''replace \r\n to <br>'''})
+        form = PlacemarkForm(data=form_data)
+        form.is_valid()
+        cleaned_data = form.clean_balloonBody()
+        self.assertEqual(cleaned_data, '''replace <br> to <br>''')
+        
+        form_data.update({'balloonBody': ' remove \t'})
+        form = PlacemarkForm(data=form_data)
+        form.is_valid()
+        cleaned_data = form.clean_balloonBody()
+        self.assertEqual(cleaned_data, 'remove')
+    
+    def test_clean_balloonFooter(self):
+        form_data = self.form_data
+        
+        form_data.update({'balloonFooter': '''replace ' ' to ""'''})
+        form = PlacemarkForm(data=form_data)
+        form.is_valid()
+        cleaned_data = form.clean_balloonFooter()
+        self.assertEqual(cleaned_data, '''replace " " to ""''')
+        
+        form_data.update({'balloonFooter': '''replace \r\n to <br>'''})
+        form = PlacemarkForm(data=form_data)
+        form.is_valid()
+        cleaned_data = form.clean_balloonFooter()
+        self.assertEqual(cleaned_data, '''replace <br> to <br>''')
+        
+        form_data.update({'balloonFooter': ' remove \t'})
+        form = PlacemarkForm(data=form_data)
+        form.is_valid()
+        cleaned_data = form.clean_balloonFooter()
+        self.assertEqual(cleaned_data, 'remove')
+        
+    def test_clean(self):
+        #TODO add some tests
+        pass
 
 
 class CollectionFormTestCase(TestCase):
@@ -83,6 +154,10 @@ class CollectionFormTestCase(TestCase):
     def test_form_is_valid(self):
         form = CollectionForm(data=self.form_data)
         self.assertTrue(form.is_valid())
+        
+    def test_clean(self):
+        #TODO add some tests
+        pass
 
 
 class ClasterFormTestCase(TestCase):
@@ -98,6 +173,10 @@ class ClasterFormTestCase(TestCase):
     def test_form_is_valid(self):
         form = ClasterForm(data=self.form_data)
         self.assertTrue(form.is_valid())
+        
+    def test_clean(self):
+        #TODO add some tests
+        pass
 
 
 class RouteFormTestCase(TestCase):
@@ -111,3 +190,7 @@ class RouteFormTestCase(TestCase):
         form.is_valid()
         self.assertEqual(len(form.errors['__all__']), 1)
         self.assertIn("To create route need at least two Placemarks", form.errors['__all__'])
+        
+    def test_clean(self):
+        #TODO add some tests
+        pass

@@ -1,16 +1,15 @@
 {
-    {% if collection.icon_style == 'default' or claster.icon_style == 'default' %}
+    {% if not collection.icon_style and not claster.icon_style and place.icon_style == 'default' %}
         iconContent: "{{ forloop.counter }}",
-    {% elif claster.icon_caption or collection.icon_caption %}
+    {% elif collection.icon_style == 'default' or claster.icon_style == 'default' %}
+        iconContent: "{{ forloop.counter }}",
+    {% elif place.icon_style == 'stretchy' or collection.icon_style == 'stretchy' or claster.icon_style == 'stretchy' %}
         iconContent: "{{ place.title }}",
-    {% else %}
-        {% if place.icon_style == 'default' %}
-            iconContent: "{{ forloop.counter }}",
-        {% elif place.icon_caption %}
-            iconContent: "{{ place.title }}",
-            iconCaption: "{{ place.title }}",
-        {% endif %}
-    {% endif%}
+    {% elif place.icon_style == 'image' and place.icon_caption or collection.icon_style == 'image' and collection.icon_caption or claster.icon_style == 'image' and claster.icon_caption %}
+        iconContent: "{{ place.title }}",
+    {% elif place.icon_caption or collection.icon_caption or claster.icon_caption %}
+        iconCaption: "{{ place.title }}",
+    {% endif %}
     
     {% if collection.hint %}
         hintContent: "{{ collection.hint }}",
@@ -40,7 +39,7 @@
         balloonContentFooter: '{{ place.balloonFooter|safe }}',
     {% endif %}
 }, {
-    {% if not claster.icon_style and not collection.icon_style %}
+    {% if not collection.icon_style and not claster.icon_style %}
         {% if place.icon_style == "image" and place.icon_image %}
             {% if place.icon_caption %}
                 iconLayout: 'default#imageWithContent',
@@ -81,9 +80,9 @@
         iconImageSize: [{{ claster.icon_width }}, {{ claster.icon_height }}],
         iconImageOffset: [{{ claster.icon_offset_horizontal }}, {{ claster.icon_offset_vertical }}],
     {% else %}
-        {% if collection.marker_preset %}
+        {% if collection %}
             preset: "{{ collection.marker_preset }}",
-        {% elif claster.marker_preset %}
+        {% elif claster %}
             preset: "{{ claster.marker_preset }}",
         {% endif %}
     {% endif %}

@@ -1,2 +1,4 @@
 [run]
 plugins = django_coverage_plugin
+source = cmsplugin_yandex_maps
+omit = cmsplugin_yandex_maps/tests/*, cmsplugin_yandex_maps/migrations/*

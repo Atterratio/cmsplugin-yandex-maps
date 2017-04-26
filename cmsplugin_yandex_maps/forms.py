@@ -95,21 +95,21 @@ class PlacemarkForm(forms.ModelForm):
 
     def clean_balloonHeader(self):
         balloonHeader = self.cleaned_data['balloonHeader']
-        balloonHeader = balloonHeader.replace("'", '"').replace('\n', '<br>')
+        balloonHeader = balloonHeader.replace("'", '"').replace('\r\n', '<br>').replace('\t', '').strip()
         
         return balloonHeader
 
 
     def clean_balloonBody(self):
         balloonBody = self.cleaned_data['balloonBody']
-        balloonBody = balloonBody.replace("'", '"').replace('\r\n', '<br>').replace('\t', '')
+        balloonBody = balloonBody.replace("'", '"').replace('\r\n', '<br>').replace('\t', '').strip()
         
         return balloonBody
 
 
     def clean_balloonFooter(self):
         balloonFooter = self.cleaned_data['balloonFooter']
-        balloonFooter = balloonFooter.replace("'", '"').replace('\n', '<br>')
+        balloonFooter = balloonFooter.replace("'", '"').replace('\r\n', '<br>').replace('\t', '').strip()
 
         return balloonFooter
 

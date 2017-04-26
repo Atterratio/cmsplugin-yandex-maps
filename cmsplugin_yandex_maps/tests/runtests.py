@@ -11,8 +11,8 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "cmsplugin_yandex_maps.tests.set
 
 django.setup()
 from django.test.runner import DiscoverRunner
-test_runner = DiscoverRunner(verbosity=1)
-  
+test_runner = DiscoverRunner(verbosity=2)
+
 failures = test_runner.run_tests(['cmsplugin_yandex_maps'])
 if failures:
     sys.exit(failures)
