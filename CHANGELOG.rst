@@ -2,6 +2,11 @@
 CHANGELOG
 =========
 
+v0.4.4:
+-------
+*fix preset generate issue
+*update divio integration
+
 v0.4.3:
 -------
 *fix icon caption

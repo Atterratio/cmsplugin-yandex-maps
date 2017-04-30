@@ -14,6 +14,8 @@ try:
 except:
     DJANGO_VERSION = "1.10.*"
 
+
+
 class ViewsTestCase(TestCase):
     def setUp(self):
         self.anon_client = Client()
@@ -30,19 +32,20 @@ class ViewsTestCase(TestCase):
 
     def test_no_perm(self):
         resp = self.anon_client.post('/yamaps/ajax/update/placement/')
-        
+
         self.assertEqual(resp.status_code, 403)
-        
-        
+
+
         resp = self.anon_client.post('/yamaps/ajax/update/placemark/')
-        
+
         self.assertEqual(resp.status_code, 403)
-        
+
+
     def test_update_placement(self):
         test_page = cms.api.create_page('Test Page', 'base.html', 'en')
-        
+
         test_placeholder = test_page.placeholders.get(slot='test')
-        
+
         test_map_data = {'title': 'Test map', 'map_type': 'map', 'lang': 'ru_RU',
                      'auto_placement': True, 'zoom': 11, 'min_zoom': 0, 'max_zoom': 23,
                      'center_lt': 55.76, 'center_lg': 37.64, 'sizing': 'auto', 'width': 320,
@@ -52,15 +55,17 @@ class ViewsTestCase(TestCase):
         test_map_plugin = cms.api.add_plugin(test_placeholder, YandexMapsPlugin, 'en')
         test_map_plugin.__dict__.update(test_map_data)
         test_map_plugin.save()
-        
+
         data = '{"id": "1", "center": [50, 35], "zoom": 10}'
         resp = self.admin_client.post('/yamaps/ajax/update/placement/', data, 'json')
-        
+
         test_map = YandexMaps.objects.get(id=1)
+        self.assertEqual(resp.status_code, 200)
         self.assertEqual(test_map.center_lt, 50)
         self.assertEqual(test_map.center_lg, 35)
         self.assertEqual(test_map.zoom, 10)
-        
+
+
     def test_update_placemark(self):
         test_placemark_data = {'title': 'Test Placemark', 'auto_coordinates': True, 'place': 'Home',
                           'auto_placement': True, 'place_lt': None, 'place_lg': None,
@@ -74,11 +79,12 @@ class ViewsTestCase(TestCase):
         test_placemark = Placemark()
         test_placemark.__dict__.update(test_placemark_data)
         test_placemark.save()
-        
+
         data = '{"id": 1, "position": [10, 20]}'
         resp = self.admin_client.post('/yamaps/ajax/update/placemark/', data, 'json')
-        
+
         test_placemark_updated = Placemark.objects.get(id=1)
+        self.assertEqual(resp.status_code, 200)
         self.assertEqual(test_placemark_updated.place_lt, 10)
         self.assertEqual(test_placemark_updated.place_lg, 20)
         self.assertEqual(test_placemark_updated.auto_coordinates, False)

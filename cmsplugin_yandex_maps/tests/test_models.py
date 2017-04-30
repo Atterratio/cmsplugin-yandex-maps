@@ -1,6 +1,8 @@
 from django.test import TestCase
 from cmsplugin_yandex_maps.models import *
 
+
+
 # Create your tests here.
 class PreloadDataTestCase(TestCase):
     def test_behaviors(self):

@@ -1,6 +1,8 @@
 from django.test import TestCase
 from cmsplugin_yandex_maps.forms import *
 
+
+
 class YandexMapsFormTestCase(TestCase):
     def setUp(self):
         self.form_data = {'title': 'YandexMapsFormTestCase', 'map_type': 'map', 'lang': 'ru_RU',
@@ -58,6 +60,7 @@ class YandexMapsFormTestCase(TestCase):
         pass
 
 
+
 class PlacemarkFormTestCase(TestCase):
     def setUp(self):
         self.form_data = {'title': 'PlacemarkFormTestCase', 'auto_coordinates': True, 'place': 'Home',
@@ -70,52 +73,56 @@ class PlacemarkFormTestCase(TestCase):
                           'balloonHeader': '', 'balloonBody': '', 'balloonFooter': '',
                           'point_type': 'wayPoint'}
 
+
     def test_form_is_valid(self):
         form = PlacemarkForm(data=self.form_data)
         self.assertTrue(form.is_valid())
-    
+
+
     def test_clean_balloonHeader(self):
         form_data = self.form_data
-        
+
         form_data.update({'balloonHeader': '''replace ' ' to ""'''})
         form = PlacemarkForm(data=form_data)
         form.is_valid()
         cleaned_data = form.clean_balloonHeader()
         self.assertEqual(cleaned_data, '''replace " " to ""''')
-        
+
         form_data.update({'balloonHeader': '''replace \r\n to <br>'''})
         form = PlacemarkForm(data=form_data)
         form.is_valid()
         cleaned_data = form.clean_balloonHeader()
         self.assertEqual(cleaned_data, '''replace <br> to <br>''')
-        
+
         form_data.update({'balloonHeader': ' remove \t'})
         form = PlacemarkForm(data=form_data)
         form.is_valid()
         cleaned_data = form.clean_balloonHeader()
         self.assertEqual(cleaned_data, 'remove')
-    
+
+
     def test_clean_balloonBody(self):
         form_data = self.form_data
-        
+
         form_data.update({'balloonBody': '''replace ' ' to ""'''})
         form = PlacemarkForm(data=form_data)
         form.is_valid()
         cleaned_data = form.clean_balloonBody()
         self.assertEqual(cleaned_data, '''replace " " to ""''')
-        
+
         form_data.update({'balloonBody': '''replace \r\n to <br>'''})
         form = PlacemarkForm(data=form_data)
         form.is_valid()
         cleaned_data = form.clean_balloonBody()
         self.assertEqual(cleaned_data, '''replace <br> to <br>''')
-        
+
         form_data.update({'balloonBody': ' remove \t'})
         form = PlacemarkForm(data=form_data)
         form.is_valid()
         cleaned_data = form.clean_balloonBody()
         self.assertEqual(cleaned_data, 'remove')
-    
+
+
     def test_clean_balloonFooter(self):
         form_data = self.form_data
         
@@ -124,22 +131,24 @@ class PlacemarkFormTestCase(TestCase):
         form.is_valid()
         cleaned_data = form.clean_balloonFooter()
         self.assertEqual(cleaned_data, '''replace " " to ""''')
-        
+
         form_data.update({'balloonFooter': '''replace \r\n to <br>'''})
         form = PlacemarkForm(data=form_data)
         form.is_valid()
         cleaned_data = form.clean_balloonFooter()
         self.assertEqual(cleaned_data, '''replace <br> to <br>''')
-        
+
         form_data.update({'balloonFooter': ' remove \t'})
         form = PlacemarkForm(data=form_data)
         form.is_valid()
         cleaned_data = form.clean_balloonFooter()
         self.assertEqual(cleaned_data, 'remove')
-        
+
+
     def test_clean(self):
         #TODO add some tests
         pass
+
 
 
 class CollectionFormTestCase(TestCase):
@@ -151,13 +160,16 @@ class CollectionFormTestCase(TestCase):
                           'icon_offset_vertical': 0, 'icon_content_offset_horizontal': 0,
                           'icon_content_offset_vertical': 0, 'hint': '', 'balloon': ''}
 
+
     def test_form_is_valid(self):
         form = CollectionForm(data=self.form_data)
         self.assertTrue(form.is_valid())
-        
+
+
     def test_clean(self):
         #TODO add some tests
         pass
+
 
 
 class ClasterFormTestCase(TestCase):
@@ -170,13 +182,16 @@ class ClasterFormTestCase(TestCase):
                           'icon_content_offset_vertical': 0, 'hint': '', 'balloon': '',
                           'disable_click_zoom': True, 'cluster_icon': 'default', 'cluster_color': 'red'}
 
+
     def test_form_is_valid(self):
         form = ClasterForm(data=self.form_data)
         self.assertTrue(form.is_valid())
-        
+
+
     def test_clean(self):
         #TODO add some tests
         pass
+
 
 
 class RouteFormTestCase(TestCase):
@@ -185,12 +200,14 @@ class RouteFormTestCase(TestCase):
                           'avoid_traffic_jams': False, 'results': 1, 'route_collor': '#9635ba',
                           'additional_routes_collor': '#7a684e'}
 
+
     def test_form_is_valid(self):
         form = RouteForm(data=self.form_data)
         form.is_valid()
         self.assertEqual(len(form.errors['__all__']), 1)
         self.assertIn("To create route need at least two Placemarks", form.errors['__all__'])
-        
+
+
     def test_clean(self):
         #TODO add some tests
         pass

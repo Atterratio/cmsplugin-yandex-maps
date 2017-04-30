@@ -34,8 +34,7 @@ INSTALLATION
 * run :code:`manage.py migrate`;
 * run :code:`manage.py collectstatic`;
 * add *jQuery* to you page template if you haven't do this already;
-* (optional) for "drag & drop" map and marker add :code:`import cmsplugin_yandex_maps.urls` and :code:`url(r'^yamaps/', include(cmsplugin_yandex_maps.urls, namespace="yamaps")),` to yours :code:`urlpatterns` in :code:`urls.py`, or add app *Yandex Maps* to one of you pages.
-
+* (optional) for "drag & drop" map and marker add :code:`import cmsplugin_yandex_maps.urls` and :code:`url(r'^yamaps/', include(cmsplugin_yandex_maps.urls, namespace="yamaps")),` to yours :code:`urlpatterns` in :code:`urls.py`.
 
 FEATURES
 ========

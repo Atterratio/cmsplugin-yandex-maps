@@ -41,15 +41,6 @@ ALLOWED_HOSTS = []
 ROOT_URLCONF = 'cmsplugin_yandex_maps.tests.urls'
 
 
-# Database
-# https://docs.djangoproject.com/en/1.8/ref/settings/#databases
-
-
-
-
-# Internationalization
-# https://docs.djangoproject.com/en/1.8/topics/i18n/
-
 LANGUAGE_CODE = 'en'
 
 TIME_ZONE = 'Europe/Moscow'
